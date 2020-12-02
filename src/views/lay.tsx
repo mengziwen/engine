@@ -1,7 +1,7 @@
 import { defineComponent, reactive } from 'vue';
 import { RouterView } from 'vue-router';
 
-const data = reactive({
+const data = reactive<{ needLogin: boolean }>({
   needLogin: true,
 });
 
