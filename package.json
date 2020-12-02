@@ -10,6 +10,7 @@
     "eslint:check": "eslint '**'",
     "eslint:fix": "eslint --fix '**'",
     "gd": "git add .",
+    "push": "git push origin",
     "prettier": "prettier --write --no-editorconfig --config-precedence file-override '**'"
   },
   "dependencies": {
