@@ -1,0 +1,67 @@
+html,
+body {
+  font-size: 12px;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+  margin: 0;
+  font-family: 'Microsoft YaHei', '微软雅黑', 'MicrosoftJhengHei', '华文细黑',
+    'STHeiti', 'MingLiu';
+}
+
+a {
+  text-decoration: none;
+}
+
+input,
+button,
+textarea {
+  color: inherit;
+  font: inherit;
+}
+
+a,
+input,
+button,
+textarea {
+  &:focus {
+    outline: none;
+  }
+}
+
+button {
+  outline: none;
+  background-image: none;
+  user-select: none;
+  padding: 0;
+}
+
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+i {
+  font-style: normal;
+}
+
+.abs {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+#layout {
+  height: 100vh;
+  position: relative;
+}
+
+.mask_body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+}
