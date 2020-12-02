@@ -1,24 +1,30 @@
-# tv
+<!--
+ * @abstract: JianJie
+ * @version: 0.0.1
+ * @Author: bhabgs
+ * @Date: 2020-11-30 09:29:23
+ * @LastEditors: bhabgs
+ * @LastEditTime: 2020-12-02 15:09:37
+-->
 
-## Project setup
-```
-yarn install
-```
+# vue3.0 micro 模板
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## 安装依赖
 
-### Compiles and minifies for production
-```
-yarn build
-```
+> `yarn of npm i`
 
-### Lints and fixes files
-```
-yarn lint
-```
+## 运行项目
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+> `yarn serve`
+
+## 将代码添加到缓存区
+
+> `yarn gd`
+
+## 添加 commit
+
+> `yarn commit`
+
+## 推送代码到远程
+
+> `yarn push branchName`
