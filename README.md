@@ -8,6 +8,7 @@
 -->
 
 # vue3.0 micro 模板
+> ant 在vue3.0 中以一定的问题，暂时选择使用 element-puls
 
 ## 安装依赖
 
