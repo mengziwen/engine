@@ -2,9 +2,9 @@
  * @abstract: JianJie
  * @version: 0.0.1
  * @Author: bhabgs
- * @Date: 2020-12-01 16:34:44
+ * @Date: 2021-01-13 10:13:25
  * @LastEditors: bhabgs
- * @LastEditTime: 2020-12-02 14:07:56
+ * @LastEditTime: 2021-01-16 12:03:12
  */
 import { instance } from '@/util/axios';
 import { getAllQuery } from './getQuery';
@@ -16,11 +16,13 @@ interface BASECALLDATA {
   data: any;
   msg: string;
 }
+const { netType, corpId } = getAllQuery();
+
+const config = {
+  netType: netType || 1,
+};
 
 export default {
-  config: {
-    netType: 2 as netType,
-  },
   // 检查用户信息
   async checkToken(token?: string): Promise<BASECALLDATA> {
     token = token || window.sessionStorage.getItem('token') || '';
@@ -37,7 +39,7 @@ export default {
     let res: any;
     try {
       res = await instance.get(
-        `/auth/oauth/getTokenByCode?code=${code}&netType=${this.config.netType}`,
+        `/auth/oauth/getTokenByCode?code=${code}&netType=${config.netType}`,
       );
     } catch (error) {
       return this.baseCallData(
@@ -61,22 +63,29 @@ export default {
 
   async check(checkCorpId?: boolean): Promise<BASECALLDATA> {
     let res = await this.checkToken();
-    const { corpId } = getAllQuery();
+    const sessionCorpId = sessionStorage.getItem('corpId');
     if (res.type === 'failure') {
       const { userCode } = getAllQuery();
       if (!userCode)
         return this.baseCallData('failure', {}, '客户端没有传递userCode');
       res = await this.getTokenByCode(userCode);
     }
-
-    if (!corpId && checkCorpId) {
+    if (!corpId && !sessionCorpId && checkCorpId) {
       return this.baseCallData('failure', {}, '客户端没有传递corpId');
     }
-    window.sessionStorage.setItem('corpId', corpId);
+    window.sessionStorage.setItem('corpId', corpId || sessionCorpId);
     return res;
   },
   baseCallData(type: type, data: any, msg: string): Promise<BASECALLDATA> {
     // Promise.reject
     return Promise.resolve({ type, data, msg });
+  },
+  async refreshToken(cb?: () => {}) {
+    const rfToken = sessionStorage.getItem('rf_token');
+    const res = await instance.get(`/refresh/token?refresh_token=${rfToken}`);
+    sessionStorage.setItem('token', res.data.access_token);
+    sessionStorage.setItem('rf_token', res.data.refresh_token);
+    if (cb) cb();
+    return this.baseCallData('ok', res, '');
   },
 };

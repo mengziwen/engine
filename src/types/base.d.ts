@@ -4,23 +4,33 @@
  * @Author: bhabgs
  * @Date: 2020-11-30 10:05:16
  * @LastEditors: bhabgs
- * @LastEditTime: 2020-12-01 15:23:16
+ * @LastEditTime: 2021-01-16 12:01:41
  */
 
 // 展示平台
-type FLATFORM = 'app' | 'pcAdmin' | 'pc';
+type PLATFORM = 'app' | 'pcAdmin' | 'pc' | 'pad' | 'web' | 'all';
 
-// 设置vue用户自定义属性
-declare module '@vue/runtime-core' {
-  export interface ComponentCustomProperties {
-    flatForm: FLATFORM;
-  }
-}
+type mcLib = 'temperalure' | 'current';
 
-export interface baseObject<T = any> {
+interface baseObject<T = any> {
   [key: string]: T;
 }
 
-export interface REGOPTIONS {
-  flatForm: FLATFORM;
+interface baseDictionary {
+  code: string;
+  name: string;
+  pId?: string;
+  disable?: boolean;
+}
+
+interface REGOPTIONS {
+  platForm: PLATFORM;
+  local: boolean;
+}
+
+interface TCMCHISTORY {
+  dt: number;
+  mc: string;
+  tc: string;
+  v: string;
 }

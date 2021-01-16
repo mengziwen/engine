@@ -4,14 +4,19 @@
  * @Author: bhabgs
  * @Date: 2020-12-01 09:36:42
  * @LastEditors: bhabgs
- * @LastEditTime: 2020-12-01 09:41:09
+ * @LastEditTime: 2021-01-16 12:01:59
  */
-const isMobile = () => {
-  return navigator.userAgent.match(
-    /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i,
-  );
+const platForm: () => PLATFORM = () => {
+  const phoneMatch = /phone|iPhone|Moto|SM|Pixel/;
+  const padMatch = /pad|iPod|Mobile/;
+
+  if (navigator.userAgent.match(phoneMatch)) return 'app';
+
+  if (navigator.userAgent.match(padMatch)) return 'pad';
+
+  return 'web';
 };
 
-export { isMobile };
+export { platForm };
 
-export default { isMobile };
+export default { platForm };

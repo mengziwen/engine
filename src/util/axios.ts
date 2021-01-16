@@ -4,12 +4,11 @@
  * @Author: bhabgs
  * @Date: 2020-12-02 09:23:52
  * @LastEditors: bhabgs
- * @LastEditTime: 2020-12-02 11:29:58
+ * @LastEditTime: 2021-01-16 12:03:04
  */
-import { baseObject, FLATFORM } from '@/types/base';
 import axios from 'axios';
 
-const clientType: FLATFORM = 'app';
+const clientType: PLATFORM = 'app';
 
 const headers: baseObject = {
   'X-Custom-Header': 'foobar',
@@ -22,7 +21,7 @@ const instance = axios.create({
   timeout: 60000,
   validateStatus(status) {
     if (status > 400 && status < 500) {
-      console.error(`请求失败. status:${status}`);
+      // console.error(`请求失败. status:${status}`);
     }
     return status < 500;
   },

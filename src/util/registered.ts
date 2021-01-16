@@ -2,32 +2,38 @@
  * @abstract: JianJie
  * @version: 0.0.1
  * @Author: bhabgs
- * @Date: 2020-11-30 09:53:41
+ * @Date: 2021-01-16 11:58:53
  * @LastEditors: bhabgs
- * @LastEditTime: 2020-12-01 14:42:08
+ * @LastEditTime: 2021-01-16 12:02:18
  */
 import router from '@/router';
 import { App } from 'vue';
+import ant from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
 import '@/assets/less/index.less';
-import { REGOPTIONS } from '@/types/base';
 import vueGlobal from './globalProperties';
 
 export default {
-  install(app: App, option: REGOPTIONS) {
+  async install(app: App, option: REGOPTIONS) {
+    const production = process.env.NODE_ENV === 'production';
     const globalProperties = {
-      flatForm: option.flatForm,
+      platForm: option.platForm,
+      local: !production ? option.local : false,
     };
     // 引入路由
     app.use(router);
+
+    // 引入vuex
 
     // 全局配置
     app.use(vueGlobal, globalProperties);
     // 平台无关事项
 
     // 根据平台特性引入相关事项
-    if (option.flatForm === 'pc') {
+    if (option.platForm === 'web') {
       // 动态倒入 pc端使用的插件仓库
-    } else if (option.flatForm === 'app') {
+      app.use(ant);
+    } else if (option.platForm === 'app') {
       // 动态倒入app 端使用的插件与仓库
     } else {
       // 其他平台 带扩展
