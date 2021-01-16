@@ -4,7 +4,7 @@
  * @Author: bhabgs
  * @Date: 2020-04-14 09:55:34
  * @LastEditors: bhabgs
- * @LastEditTime: 2020-11-30 11:34:44
+ * @LastEditTime: 2021-01-16 12:04:21
  */
 const packageJson = require('../package.json');
 
@@ -53,8 +53,8 @@ const chainWebpack = (config) => {
 };
 
 exports.default = {
-  library: '',
-  publicPath: '',
+  library: conf.library,
+  publicPath: conf.publicPath,
   chainWebpack,
   externals: isProd ? assetsCDN.externals : {},
 };
