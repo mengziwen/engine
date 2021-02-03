@@ -4,7 +4,7 @@
  * @Author: bhabgs
  * @Date: 2020-04-14 09:55:34
  * @LastEditors: bhabgs
- * @LastEditTime: 2021-01-16 12:04:21
+ * @LastEditTime: 2021-02-03 09:51:42
  */
 const packageJson = require('../package.json');
 
@@ -19,19 +19,24 @@ const assetsCDN = {
   },
   css: [],
   js: [
-    '//cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.min.js',
-    '//cdn.jsdelivr.net/npm/vue-router@3.1.3/dist/vue-router.min.js',
-    '//cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js',
+    'https://unpkg.com/vue@3.0.4/dist/vue.global.js',
+    'https://unpkg.com/vue-router@4.0.1/dist/vue-router.global.js',
+    'https://unpkg.com/vuex@3.6.0/dist/vuex.js',
+    '//cdn.jsdelivr.net/npm/axios@0.21.0/dist/axios.min.js',
+    'https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js',
+    'https://cdn.jsdelivr.net/npm/ant-design-vue@next/dist/antd.js',
   ],
 };
+
+const isIntranet = process.env.INTERNET === 'intranet';
 
 const isProd = process.env.NODE_ENV === 'production';
 
 const conf = {
   isProd,
-  title: '3.0模板',
-  library: 'micro-template',
-  publicPath: 'micro-template',
+  title: '数据调试',
+  library: 'micro-debugging',
+  publicPath: '/micro-debugging',
 };
 
 const chainWebpack = (config) => {
@@ -45,16 +50,15 @@ const chainWebpack = (config) => {
       cdn,
       version: packageJson.version,
     });
-    if (isProd) {
+    if (isIntranet) {
       args[0] = Object.assign(args[0], { cdn: assetsCDN });
     }
     return args;
   });
 };
-
 exports.default = {
   library: conf.library,
   publicPath: conf.publicPath,
   chainWebpack,
-  externals: isProd ? assetsCDN.externals : {},
+  externals: isIntranet ? assetsCDN.externals : {},
 };

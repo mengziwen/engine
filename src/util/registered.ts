@@ -4,7 +4,7 @@
  * @Author: bhabgs
  * @Date: 2021-01-16 11:58:53
  * @LastEditors: bhabgs
- * @LastEditTime: 2021-01-16 12:02:18
+ * @LastEditTime: 2021-02-03 09:55:57
  */
 import router from '@/router';
 import { App } from 'vue';

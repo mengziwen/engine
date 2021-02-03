@@ -4,10 +4,8 @@
  * @Author: bhabgs
  * @Date: 2020-12-02 11:21:27
  * @LastEditors: bhabgs
- * @LastEditTime: 2020-12-02 11:23:27
+ * @LastEditTime: 2021-02-03 09:53:23
  */
-
-import { baseObject } from '@/types/base';
 
 const getQueryUrl = (): string => {
   return window.location.search.substr(1) || window.location.hash.split('?')[1];

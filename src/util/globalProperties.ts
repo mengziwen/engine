@@ -1,4 +1,3 @@
-import { baseObject } from '@/types/base';
 import { App } from 'vue';
 
 /*
