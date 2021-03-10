@@ -23,6 +23,7 @@ export default {
     // 引入路由
     app.use(router);
 
+    // app.use(ace)
     // 引入vuex
 
     // 全局配置

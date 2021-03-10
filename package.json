@@ -14,9 +14,16 @@
     "prettier": "prettier --write --no-editorconfig --config-precedence file-override '**'"
   },
   "dependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "ace-builds": "^1.4.12",
     "core-js": "^3.6.5",
+    "monaco-editor": "^0.23.0",
+    "monaco-editor-webpack-plugin": "^3.0.1",
+    "monaco-textmate": "^3.0.1",
     "vue": "^3.0.0",
-    "vue-class-component": "^8.0.0-0"
+    "vue-class-component": "^8.0.0-0",
+    "vue-loader-v16": "^16.0.0-beta.5.4"
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^5.1.9",
@@ -25,9 +32,7 @@
     "@commitlint/config-conventional": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-typescript": "^4.5.11",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",

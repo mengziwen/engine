@@ -13,17 +13,17 @@ import uni from '@/util/stringToUni';
 
 const routerRow: RouteRecordRaw = {
   path: '/',
-  async beforeEnter(to, from, next) {
-    const res = await checkUser.check(true);
-    if (res.type === 'ok') {
-      next();
-    } else {
-      next({
-        path: `/login`,
-        query: { prevpath: to.path, msg: uni.encodeUnicode(res.msg) },
-      });
-    }
-  },
+  // async beforeEnter(to, from, next) {
+  //   const res = await checkUser.check(true);
+  //   if (res.type === 'ok') {
+  //     next();
+  //   } else {
+  //     next({
+  //       path: `/login`,
+  //       query: { prevpath: to.path, msg: uni.encodeUnicode(res.msg) },
+  //     });
+  //   }
+  // },
   component: {
     template: '<RouterView />',
   },
@@ -32,6 +32,10 @@ const routerRow: RouteRecordRaw = {
       path: '/',
       name: 'index',
       component: index,
+      children: [
+        { path: '/tree', component: () => import('@/views/tree') },
+        { path: '/function', component: () => import('@/views/function') },
+      ],
     },
   ],
 };

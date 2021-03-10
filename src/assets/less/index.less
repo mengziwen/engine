@@ -2,3 +2,12 @@
 @import './reset.less';
 @import './font.less';
 @import './login.less';
+
+.flex {
+  display: flex;
+}
+each(range(12), {
+    .flex@{value} {
+        flex: @value;
+    }
+});
