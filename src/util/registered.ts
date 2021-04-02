@@ -12,6 +12,7 @@ import ant from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import '@/assets/less/index.less';
 import vueGlobal from './globalProperties';
+import { instance } from './axios';
 
 export default {
   async install(app: App, option: REGOPTIONS) {
@@ -19,6 +20,7 @@ export default {
     const globalProperties = {
       platForm: option.platForm,
       local: !production ? option.local : false,
+      $axios: instance,
     };
     // 引入路由
     app.use(router);

@@ -11,7 +11,7 @@ const path = require('path');
 const VueConf = require('./vueconf/index').default;
 const configWebpack = require('./vueconf/configureWebpack').default;
 
-const ip = 'http://192.168.5.97';
+const ip = 'http://192.168.5.183:8009';
 
 module.exports = {
   publicPath: VueConf.publicPath,

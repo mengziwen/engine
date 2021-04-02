@@ -7,10 +7,17 @@
  * @LastEditTime: 2021-02-03 09:54:42
  */
 import { createApp } from 'vue';
+import { AxiosInstance } from 'axios';
 import { reg, systemInfo } from '@/util';
 import lay from './views/lay';
 
 const app = createApp(lay);
+
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $axios: AxiosInstance;
+  }
+}
 
 const regOption = {
   platForm: systemInfo.platForm(),
@@ -19,4 +26,4 @@ const regOption = {
 
 app.use(reg, regOption);
 
-app.mount('#app');
+const vm = app.mount('#app');

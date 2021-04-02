@@ -35,6 +35,11 @@ const routerRow: RouteRecordRaw = {
       children: [
         { path: '/tree', component: () => import('@/views/tree') },
         { path: '/function', component: () => import('@/views/function') },
+        { path: '/treeList', component: () => import('@/views/treeList') },
+        {
+          path: '/functionList',
+          component: () => import('@/views/functionList'),
+        },
       ],
     },
   ],
