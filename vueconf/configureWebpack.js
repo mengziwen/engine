@@ -7,7 +7,6 @@
  * @LastEditTime: 2020-11-30 11:09:17
  */
 const StatsPlugin = require('stats-webpack-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const VueConf = require('./index').default;
 
 exports.default = {
@@ -21,7 +20,6 @@ exports.default = {
   },
   externals: VueConf.externals,
   plugins: [
-    new MonacoWebpackPlugin(),
     new StatsPlugin('manifest.json', {
       // 方便后期父项目动态加载
       chunkModules: false,
