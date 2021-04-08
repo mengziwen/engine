@@ -7,7 +7,4 @@ function enCode(str: string) {
   return window.btoa(code);
 }
 
-export default {
-  enCode,
-  unCode,
-};
+export { enCode, unCode };

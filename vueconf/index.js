@@ -35,8 +35,8 @@ const isProd = process.env.NODE_ENV === 'production';
 const conf = {
   isProd,
   title: '数据调试',
-  library: 'micro-debugging',
-  publicPath: '/micro-debugging',
+  library: 'micro-engine',
+  publicPath: '/micro-engine',
 };
 
 const chainWebpack = (config) => {
