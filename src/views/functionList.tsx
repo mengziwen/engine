@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 import moment from 'moment';
 import { message } from 'ant-design-vue';
-import codeUtil from '@/util/uriAndMD5';
+// import codeUtil from '@/util/uriAndMD5';
 
 export default defineComponent({
   data() {
