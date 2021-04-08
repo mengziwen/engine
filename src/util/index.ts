@@ -17,7 +17,7 @@ const id = (length: number = 9, alias?: string) =>
   ).toString(36)}`;
 
 const functions = { reg, id, ...systemInfo };
-
+debugger;
 export { reg, systemInfo, id };
 
 export default functions;

@@ -62,11 +62,24 @@ export default defineComponent({
         message.error('服务异常');
       }
     },
+    async preview(funcName: string) {
+      const res: any = await this.$axios.get(
+        `/fsmEdge/v1/define/getScriptDetails/${funcName}`,
+      );
+      const code = res.data.scriptSourceCode;
+    },
     customRender() {
       const obj: any = {};
       obj.operation = (prop: any) => {
         return (
           <div>
+            <a-button
+              onClick={() => {
+                this.preview(prop.record.funcName);
+              }}
+            >
+              预览
+            </a-button>
             <a-button
               onClick={() => {
                 this.$router.push({

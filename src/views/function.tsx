@@ -43,18 +43,23 @@ export default defineComponent({
       const res = await this.$axios.get(`/fsmEdge/v1/ruleFunc/getById/${id}`);
       this.funObj = res.data;
       this.param = res.data.paramDefineList;
-      let code = window.atob(res.data.scriptDetails);
-      code = decodeURI(code);
+      const code = this.unCode(res.data.scriptDetails);
       this.aceEditor.setValue(code);
+    },
+    unCode(str: string) {
+      const code = window.atob(str);
+      return decodeURI(code);
+    },
+    enCode(str: string) {
+      const code = encodeURI(str);
+      return window.btoa(code);
     },
     addParam() {
       this.param.push({});
     },
     async save() {
-      let code = this.aceEditor.getValue();
-      code = encodeURI(code);
-      code = window.btoa(code);
-      this.funObj.scriptDetails = code;
+      const code = this.aceEditor.getValue();
+      this.funObj.scriptDetails = this.enCode(code);
       this.funObj.paramDefineList = this.param;
       const res = await this.$axios.post(
         '/fsmEdge/v1/ruleFunc/save',
