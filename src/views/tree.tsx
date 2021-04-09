@@ -70,7 +70,6 @@ export default defineComponent({
     };
     const addNode = (param: any) => {
       const data = [...tree.value];
-      debugger;
       const item: any = findSelf(data[0], param.key);
       if (!item.children) {
         item.children = [];
