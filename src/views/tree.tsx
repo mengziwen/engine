@@ -96,8 +96,8 @@ export default defineComponent({
     const handleSearch = (val: string) => {
       const arr = funAll.filter((ele: any) => {
         return (
-          ele.name &&
-          (ele.name.indexOf(val) >= 0 || ele.funcName.indexOf(val) >= 0)
+          (ele.name && ele.name.indexOf(val) >= 0) ||
+          ele.funcName.indexOf(val) >= 0
         );
       });
       funOption.value = arr;
@@ -111,8 +111,8 @@ export default defineComponent({
       });
       const arr = funAll.filter((ele: any) => {
         return (
-          ele.name &&
-          (ele.name.indexOf(val) >= 0 || ele.funcName.indexOf(val) >= 0)
+          (ele.name && ele.name.indexOf(val) >= 0) ||
+          ele.funcName.indexOf(val) >= 0
         );
       });
       funOption.value = arr;
@@ -444,6 +444,7 @@ export default defineComponent({
             this.handleOK();
           }}
         >
+          输入函数名或code：
           <a-select
             show-search
             v-model={[this.state.fun.funName, 'value']}
