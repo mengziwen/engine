@@ -61,7 +61,7 @@ export default defineComponent({
             res = element;
             break;
           } else if (element.children) {
-            findSelf(element, key);
+            res = findSelf(element, key);
           }
         }
       }
@@ -70,6 +70,7 @@ export default defineComponent({
     };
     const addNode = (param: any) => {
       const data = [...tree.value];
+      debugger;
       const item: any = findSelf(data[0], param.key);
       if (!item.children) {
         item.children = [];
@@ -195,7 +196,7 @@ export default defineComponent({
           res = ele;
           break;
         } else if (element.children) {
-          this.findParent(element, key);
+          res = this.findParent(element, key);
         }
       }
       return res;

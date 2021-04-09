@@ -1,6 +1,7 @@
 import { defineComponent } from 'vue';
 import moment from 'moment';
-import { message } from 'ant-design-vue';
+import { message, notification } from 'ant-design-vue';
+import codeUtil from '@/util/uriAndMD5';
 
 export default defineComponent({
   data() {
@@ -62,11 +63,34 @@ export default defineComponent({
         message.error('服务异常');
       }
     },
+    async preview(val: string) {
+      const res: any = await this.$axios.get(
+        `/fsmEdge/v1/define/getScriptDetails/${val}`,
+      );
+      const str = res.data.scriptSourceCode;
+      const code = codeUtil.unCode(str);
+      notification.open({
+        message: '结果',
+        description: code,
+        duration: null,
+        style: {
+          width: '1000px',
+          marginLeft: `${335 - 1000}px`,
+        },
+      });
+    },
     customRender() {
       const obj: any = {};
       obj.operation = (prop: any) => {
         return (
           <div>
+            <a-button
+              onClick={() => {
+                this.preview(prop.record.treeCode);
+              }}
+            >
+              预览
+            </a-button>
             <a-button
               onClick={() => {
                 this.$router.push({

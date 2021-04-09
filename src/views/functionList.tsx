@@ -68,11 +68,11 @@ export default defineComponent({
       const res: any = await this.$axios.get(
         `/fsmEdge/v1/define/getScriptDetails/${funcName}`,
       );
-      const code = res.data.scriptSourceCode;
-      this.code = codeUtil.unCode(code);
+      const str = res.data.scriptSourceCode;
+      const code = codeUtil.unCode(str);
       notification.open({
         message: '结果',
-        description: this.code,
+        description: code,
         duration: null,
         style: {
           width: '1000px',
