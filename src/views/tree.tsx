@@ -318,26 +318,17 @@ export default defineComponent({
       obj.multi = (param: any) => {
         return (
           <div class='flex'>
-            {/* 输入框 */}
-            {param.data
-              .filter((ele: any) => {
-                return ele.type === 'input';
-              })
-              .map((ele: any) => {
-                return (
+            {param.data.map((ele: any) => {
+              let dom: JSX.Element | undefined;
+              if (ele.type === 'input') {
+                dom = (
                   <a-input
                     style='width: 200px'
                     v-model={[ele.value, 'value']}
                   />
                 );
-              })}
-            {/* 函数 */}
-            {param.data
-              .filter((ele: any) => {
-                return ele.type === 'fun';
-              })
-              .map((ele: any) => {
-                return (
+              } else {
+                dom = (
                   <a-input
                     show-search
                     placeholder='选择函数'
@@ -348,7 +339,9 @@ export default defineComponent({
                     }}
                   ></a-input>
                 );
-              })}
+              }
+              return dom;
+            })}
 
             <a-button
               type='primary'

@@ -1,10 +1,10 @@
 function unCode(str: string) {
   const code = window.atob(str);
-  return decodeURI(code);
+  return decodeURIComponent(code);
 }
 function enCode(str: string) {
-  const code = encodeURI(str);
+  const code = encodeURIComponent(str);
   return window.btoa(code);
 }
 
-export { enCode, unCode };
+export default { enCode, unCode };

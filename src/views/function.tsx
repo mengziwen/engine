@@ -4,6 +4,7 @@ import ace from 'ace-builds';
 import 'ace-builds/webpack-resolver';
 import 'ace-builds/src-noconflict/theme-xcode'; // 默认设置的主题
 import 'ace-builds/src-noconflict/mode-groovy'; // 默认设置的语言模式
+import codeUtil from '@/util/uriAndMD5';
 
 import '@/assets/less/function.less';
 
@@ -43,23 +44,15 @@ export default defineComponent({
       const res = await this.$axios.get(`/fsmEdge/v1/ruleFunc/getById/${id}`);
       this.funObj = res.data;
       this.param = res.data.paramDefineList;
-      const code = this.unCode(res.data.scriptDetails);
+      const code = codeUtil.unCode(res.data.scriptDetails);
       this.aceEditor.setValue(code);
-    },
-    unCode(str: string) {
-      const code = window.atob(str);
-      return decodeURIComponent(code);
-    },
-    enCode(str: string) {
-      const code = encodeURIComponent(str);
-      return window.btoa(code);
     },
     addParam() {
       this.param.push({});
     },
     async save() {
       const code = this.aceEditor.getValue();
-      this.funObj.scriptDetails = this.enCode(code);
+      this.funObj.scriptDetails = codeUtil.enCode(code);
       this.funObj.paramDefineList = this.param;
       const res = await this.$axios.post(
         '/fsmEdge/v1/ruleFunc/save',
