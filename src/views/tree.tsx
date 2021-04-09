@@ -26,7 +26,7 @@ export default defineComponent({
   setup(props, context) {
     // 选择函数绑定界面显示用
     const state = reactive({
-      fun: { name: '', id: '', paramDefineList: [] },
+      fun: { name: '', id: '', paramDefineList: [], funName: '' },
     });
     // 全部函数
     let funAll: never[] = [];
@@ -95,18 +95,25 @@ export default defineComponent({
     };
     const handleSearch = (val: string) => {
       const arr = funAll.filter((ele: any) => {
-        return ele.name && ele.name.indexOf(val) >= 0;
+        return (
+          ele.name &&
+          (ele.name.indexOf(val) >= 0 || ele.funcName.indexOf(val) >= 0)
+        );
       });
       funOption.value = arr;
     };
-    const handleChange = (name: string) => {
+    const handleChange = (val: string) => {
       funAll.forEach((element: any) => {
-        if (element.name === name) {
+        if (element.funcName === val) {
           state.fun = element;
+          state.fun.funName = element.funcName;
         }
       });
       const arr = funAll.filter((ele: any) => {
-        return ele.name && ele.name.indexOf(name) >= 0;
+        return (
+          ele.name &&
+          (ele.name.indexOf(val) >= 0 || ele.funcName.indexOf(val) >= 0)
+        );
       });
       funOption.value = arr;
     };
@@ -194,11 +201,12 @@ export default defineComponent({
       return res;
     },
     async handleOK() {
-      this.funObj.value = this.state.fun.name;
+      this.funObj.value = this.state.fun.funName;
       this.funObj.param = this.state.fun.paramDefineList;
       const obj: any = {};
-      obj.funcName = this.state.fun.name;
+      obj.funcName = this.state.fun.funName;
       obj.tupleParamList = this.state.fun.paramDefineList;
+      // 获取显示文本
       const res = await this.$axios.post(
         '/fsmEdge/v1/ruleExpression/toFuncTupleView',
         obj,
@@ -259,10 +267,10 @@ export default defineComponent({
       this.dialogShow = true;
       this.funObj = ele;
       if (ele.value) {
-        this.state.fun.name = ele.value;
+        this.state.fun.funName = ele.value;
         this.state.fun.paramDefineList = ele.param;
       } else {
-        this.state.fun.name = '';
+        this.state.fun.funName = '';
         this.state.fun.paramDefineList = [];
       }
     },
@@ -438,7 +446,7 @@ export default defineComponent({
         >
           <a-select
             show-search
-            v-model={[this.state.fun.name, 'value']}
+            v-model={[this.state.fun.funName, 'value']}
             placeholder='input search text'
             notFoundContent={null}
             filter-option={false}
@@ -452,7 +460,9 @@ export default defineComponent({
           >
             {this.funOption.map((ele: any) => {
               return (
-                <a-select-option key={ele.name}>{ele.name}</a-select-option>
+                <a-select-option key={ele.funcName}>
+                  {ele.name}:{ele.funcName}
+                </a-select-option>
               );
             })}
           </a-select>
