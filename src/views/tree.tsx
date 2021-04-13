@@ -1,9 +1,9 @@
 import { defineComponent, getCurrentInstance, reactive, ref } from 'vue';
 import { RightCircleOutlined, DownSquareOutlined } from '@ant-design/icons-vue';
-import { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
+import { message, notification } from 'ant-design-vue';
+import codeUtil from '@/util/uriAndMD5';
 
 import '@/assets/less/tree.less';
-import { message } from 'ant-design-vue';
 
 export default defineComponent({
   mounted() {
@@ -214,6 +214,29 @@ export default defineComponent({
       this.funObj.show = res.data.viewStr;
       this.dialogShow = false;
     },
+    async preview() {
+      const obj: any = {
+        enabled: true,
+        treeName: this.treeObj.treeName,
+        treeCode: this.treeObj.treeCode,
+        rootTreeNode: this.getServerNode(this.tree[0]),
+      };
+      const res: any = await this.$axios.post(
+        '/fsmEdge/v1/ruleExpression/preview',
+        obj,
+      );
+      const str = res.data.scriptSourceCode;
+      const resCode = codeUtil.unCode(str);
+      notification.open({
+        message: '结果',
+        description: resCode,
+        duration: null,
+        style: {
+          width: '1000px',
+          marginLeft: `${335 - 1000}px`,
+        },
+      });
+    },
     async save() {
       const obj: any = {
         enabled: true,
@@ -419,6 +442,14 @@ export default defineComponent({
             }}
           >
             取消
+          </a-button>
+          <a-button
+            type='primary'
+            onClick={() => {
+              this.preview();
+            }}
+          >
+            预览
           </a-button>
           <a-button
             type='primary'

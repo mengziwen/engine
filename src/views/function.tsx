@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue';
-import { message } from 'ant-design-vue';
+import { message, notification } from 'ant-design-vue';
 import ace from 'ace-builds';
 import 'ace-builds/webpack-resolver';
 import 'ace-builds/src-noconflict/theme-xcode'; // 默认设置的主题
@@ -19,10 +19,13 @@ export default defineComponent({
       funObj: {
         name: '',
         funcName: '',
+        moduleCode: '',
         shortIntroduce: '',
         scriptDetails: '',
         paramDefineList: [] as any[],
       },
+      timeTrigger: [] as any[],
+      dataTrigger: [] as any[],
     };
   },
   mounted() {
@@ -41,11 +44,22 @@ export default defineComponent({
   },
   methods: {
     async getData(id: any) {
+      // 详情
       const res = await this.$axios.get(`/fsmEdge/v1/ruleFunc/getById/${id}`);
       this.funObj = res.data;
       this.param = res.data.paramDefineList;
       const code = codeUtil.unCode(res.data.scriptDetails);
       this.aceEditor.setValue(code);
+      // 触发条件
+      const res2 = await this.$axios.get(
+        `/fsmEdge/v1/scheduler/getByCode/${this.funObj.funcName}`,
+      );
+      if (res2.data) {
+        this.dataTrigger = res2.data.schedulerOnDataItems;
+        this.timeTrigger = [
+          { delay: res2.data.startTime, period: res2.data.period },
+        ];
+      }
     },
     addParam() {
       this.param.push({});
@@ -54,12 +68,64 @@ export default defineComponent({
       const code = this.aceEditor.getValue();
       this.funObj.scriptDetails = codeUtil.enCode(code);
       this.funObj.paramDefineList = this.param;
+      // 保存详情
       const res = await this.$axios.post(
         '/fsmEdge/v1/ruleFunc/save',
         this.funObj,
       );
+      // 保存触发条件
+      if (this.timeTrigger.length === 0 && this.dataTrigger.length === 0) {
+        const res2 = await this.$axios.delete(
+          `/fsmEdge/v1/scheduler/deleteByCode/${this.funObj.funcName}`,
+        );
+      } else {
+        const par: any = {
+          enabled: true,
+          moduleCode: this.funObj.moduleCode,
+          name: `${this.funObj.name}触发器`,
+          triggerCode: this.funObj.funcName,
+          schedulerOnDataItems: this.dataTrigger,
+        };
+        if (this.timeTrigger.length !== 0) {
+          par.startTime = this.timeTrigger[0].delay;
+          par.period = this.timeTrigger[0].period;
+        }
+        const res2 = await this.$axios.post('/fsmEdge/v1/scheduler/save', par);
+      }
+
       message.success('保存成功');
       this.$router.push('functionList');
+    },
+    async preview() {
+      const code = this.aceEditor.getValue();
+      this.funObj.scriptDetails = codeUtil.enCode(code);
+      this.funObj.paramDefineList = this.param;
+      const res = await this.$axios.post(
+        '/fsmEdge/v1/ruleFunc/preview',
+        this.funObj,
+      );
+      const str = res.data.scriptSourceCode;
+      const resCode = codeUtil.unCode(str);
+      notification.open({
+        message: '结果',
+        description: resCode,
+        duration: null,
+        style: {
+          width: '1000px',
+          marginLeft: `${335 - 1000}px`,
+        },
+      });
+    },
+    addTrigger(type: string) {
+      if (type === 'time') {
+        if (this.timeTrigger.length >= 1) {
+          message.error('定时触发最多一个');
+        } else {
+          this.timeTrigger.push({});
+        }
+      } else {
+        this.dataTrigger.push({});
+      }
     },
   },
   render() {
@@ -78,7 +144,13 @@ export default defineComponent({
               <a-input v-model={[this.funObj.funcName, 'value']}></a-input>
             </div>
           </div>
-          <div class='flex2 flex ele'>
+          <div class='flex1 flex ele'>
+            <div class='name'>moduleCode：</div>
+            <div class='flex1'>
+              <a-input v-model={[this.funObj.moduleCode, 'value']}></a-input>
+            </div>
+          </div>
+          <div class='flex1 flex ele'>
             <div class='name'>函数描述：</div>
             <div class='flex1'>
               <a-input
@@ -86,6 +158,86 @@ export default defineComponent({
               ></a-input>
             </div>
           </div>
+        </div>
+
+        <div class='trigger'>
+          <div class='title'>
+            触发条件：
+            <a-button
+              type='primary'
+              onClick={() => {
+                this.addTrigger('time');
+              }}
+            >
+              定时触发
+            </a-button>
+            <a-button
+              type='primary'
+              onClick={() => {
+                this.addTrigger('data');
+              }}
+            >
+              数据触发
+            </a-button>
+          </div>
+          {this.timeTrigger.map((ele: any, index: number) => {
+            return (
+              <div class='flex line'>
+                <div class='flex1 flex ele'>
+                  <div class='name'>定时触发：</div>
+                  <div class='name'>首次延时(秒)：</div>
+                  <div class='flex1'>
+                    <a-input v-model={[ele.delay, 'value']}></a-input>
+                  </div>
+                </div>
+                <div class='flex1 flex ele'>
+                  <div class='name'>周期(秒)：</div>
+                  <div class='flex1'>
+                    <a-input v-model={[ele.period, 'value']}></a-input>
+                  </div>
+                  <div>
+                    <a-button
+                      type='danger'
+                      onClick={() => {
+                        this.timeTrigger.splice(index, 1);
+                      }}
+                    >
+                      删除
+                    </a-button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          {this.dataTrigger.map((ele: any, index: number) => {
+            return (
+              <div class='flex line'>
+                <div class='flex1 flex ele'>
+                  <div class='name'>数据触发：</div>
+                  <div class='name'>设备编号(tc)：</div>
+                  <div class='flex1'>
+                    <a-input v-model={[ele.thingCode, 'value']}></a-input>
+                  </div>
+                </div>
+                <div class='flex1 flex ele'>
+                  <div class='name'>属性编码(mc)：</div>
+                  <div class='flex1'>
+                    <a-input v-model={[ele.metricCode, 'value']}></a-input>
+                  </div>
+                  <div>
+                    <a-button
+                      type='danger'
+                      onClick={() => {
+                        this.dataTrigger.splice(index, 1);
+                      }}
+                    >
+                      删除
+                    </a-button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <div class='functionParam'>
@@ -150,6 +302,14 @@ export default defineComponent({
             }}
           >
             取消
+          </a-button>
+          <a-button
+            type='primary'
+            onClick={() => {
+              this.preview();
+            }}
+          >
+            预览
           </a-button>
           <a-button
             type='primary'

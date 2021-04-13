@@ -2,6 +2,7 @@ import { defineComponent } from 'vue';
 import moment from 'moment';
 import { message, notification } from 'ant-design-vue';
 import codeUtil from '@/util/uriAndMD5';
+import '@/assets/less/list.less';
 
 export default defineComponent({
   data() {
@@ -35,6 +36,8 @@ export default defineComponent({
           slots: { customRender: 'operation' },
         },
       ],
+      code: '',
+      time: [] as any[],
     };
   },
   mounted() {
@@ -42,9 +45,15 @@ export default defineComponent({
   },
   methods: {
     async getData() {
+      const par: any = { searchTag: this.code };
+      if (this.time.length !== 0) {
+        par.startTime = this.time[0].valueOf();
+        par.endTime = this.time[1].valueOf();
+      }
       const res = await this.$axios.post('/fsmEdge/v1/ruleExpression/search', {
         pageNum: 1,
         pageSize: 1000,
+        ...par,
       });
       res.data.list.forEach((ele: any) => {
         ele.createTime = moment(ele.createTime).format('lll');
@@ -117,10 +126,33 @@ export default defineComponent({
   },
   render() {
     return (
-      <div>
+      <div class='list'>
+        <div class='flex tools'>
+          <span>规则名：</span>
+          <a-input class='input' v-model={[this.code, 'value']} />
+          <span>修改时间：</span>
+          <a-range-picker class='timeInput' v-model={[this.time, 'value']} />
+          <a-button
+            type='primary'
+            onClick={() => {
+              this.getData();
+            }}
+          >
+            搜索
+          </a-button>
+          <a-button
+            type='primary'
+            onClick={() => {
+              this.$router.push('tree');
+            }}
+          >
+            新建
+          </a-button>
+        </div>
         <a-table
           dataSource={this.dataSource}
           columns={this.columns}
+          rowKey='id'
           vSlots={this.customRender()}
         />
       </div>
