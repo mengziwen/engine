@@ -1,16 +1,51 @@
 import { defineComponent, reactive, ref } from 'vue';
+import { Graph, Shape, Addon } from '@antv/x6';
+import fac from '@/util/component';
+
 import '@/assets/less/action.less';
 
 export default defineComponent({
   data() {
     return {
+      graph: undefined as any,
+      stencil: undefined as any,
       action: {
         name: '',
         des: '',
       },
     };
   },
-  methods: {},
+  mounted() {
+    this.initGraph();
+  },
+  methods: {
+    initGraph() {
+      this.graph = new Graph({
+        grid: true,
+        container: document.getElementById('graph')!,
+        background: { color: '#C4E1FF' },
+      });
+
+      this.stencil = new Addon.Stencil({
+        target: this.graph,
+        title: '组件',
+        stencilGraphWidth: 280,
+        stencilGraphHeight: 600 - 32,
+      });
+      const stencilContainer = document.querySelector('#module');
+      stencilContainer!.appendChild(this.stencil.container);
+      this.stencil.load([
+        fac.getRectRadius(),
+        fac.getRhombus(),
+        fac.getRect(),
+        fac.getTrapezoid(),
+        fac.getEllipse(),
+        fac.getCircle(),
+        fac.getSquare(),
+        fac.getTriangle(),
+      ]);
+    },
+  },
   render() {
     return (
       <div class='action'>
@@ -29,7 +64,8 @@ export default defineComponent({
           </div>
         </div>
         <div class='flex drag'>
-          <div></div>
+          <div id='module'></div>
+          <div id='graph'></div>
         </div>
       </div>
     );

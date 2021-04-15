@@ -4,7 +4,7 @@ export default defineComponent({
   render() {
     return (
       <div class='index flex'>
-        <div class='flex1'>
+        <div class='menu' style='flex-basis:300px'>
           <a-menu
             mode='inline'
             onClick={(e: any) => {

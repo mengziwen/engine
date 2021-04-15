@@ -3,4 +3,22 @@
   .name {
     line-height: 32px;
   }
+  .drag {
+    margin-top: 20px;
+    #graph {
+      width: 800px;
+      height: 600px;
+    }
+    #module {
+      .x6-widget-stencil {
+        position: inherit;
+        &::after {
+          display: none;
+        }
+        .x6-widget-stencil-content {
+          position: inherit;
+        }
+      }
+    }
+  }
 }
