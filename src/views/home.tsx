@@ -11,17 +11,16 @@ export default defineComponent({
               this.$router.push(e.key);
             }}
           >
-            <a-sub-menu key='sub4' title='方法管理'>
-              <a-menu-item key='functionList'>方法管理</a-menu-item>
+            <a-sub-menu key='sub4' title='函数管理'>
+              <a-menu-item key='functionList'>函数管理</a-menu-item>
             </a-sub-menu>
             <a-sub-menu key='sub1' title='规则树'>
               <a-menu-item key='treeList'>规则管理</a-menu-item>
             </a-sub-menu>
-            <a-sub-menu key='sub2' title='动作树'>
-              <a-menu-item key='action'>新建动作</a-menu-item>
-              <a-menu-item key='6'>动作管理</a-menu-item>
+            <a-sub-menu key='sub2' title='决策管理'>
+              <a-menu-item key='action'>新建决策</a-menu-item>
+              <a-menu-item key='6'>决策管理</a-menu-item>
             </a-sub-menu>
-            <a-menu-item key='7'>日志</a-menu-item>
           </a-menu>
         </div>
         <div class='flex5'>

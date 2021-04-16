@@ -1,8 +1,10 @@
 import { Shape } from '@antv/x6';
 
 const factory: any = {};
-factory.getRect = () => {
+factory.getRect = (x?: number, y?: number) => {
   return new Shape.Rect({
+    x,
+    y,
     width: 80,
     height: 40,
     attrs: {
@@ -14,10 +16,33 @@ factory.getRect = () => {
         fill: 'white',
       },
     },
+    ports: {
+      groups: {
+        point: {
+          position: {
+            name: 'right',
+          },
+          attrs: {
+            circle: {
+              magnet: true,
+              r: 5,
+            },
+          },
+        },
+      },
+      items: [
+        {
+          id: 'port1',
+          group: 'point',
+        },
+      ],
+    },
   });
 };
-factory.getRectRadius = () => {
+factory.getRectRadius = (x?: number, y?: number) => {
   return new Shape.Rect({
+    x,
+    y,
     width: 80,
     height: 40,
     attrs: {
@@ -29,6 +54,19 @@ factory.getRectRadius = () => {
       label: {
         text: '函数',
       },
+    },
+    ports: {
+      items: [
+        {
+          id: 'port5',
+          args: {
+            position: {
+              name: 'top',
+            },
+          },
+          attrs: { circle: { r: 5, magnet: true } },
+        },
+      ],
     },
   });
 };
@@ -64,14 +102,14 @@ factory.getTrapezoid = () => {
 };
 factory.getEllipse = () => {
   return new Shape.Ellipse({
-    width: 80,
-    height: 40,
+    width: 90,
+    height: 45,
     attrs: {
       body: {
         fill: 'Magenta',
       },
       label: {
-        text: '逻辑符',
+        text: '规则',
       },
     },
   });
@@ -85,7 +123,7 @@ factory.getCircle = () => {
         fill: 'red',
       },
       label: {
-        text: '规则',
+        text: '运算符',
       },
     },
   });
@@ -115,7 +153,7 @@ factory.getTriangle = () => {
       },
       label: {
         y: 12,
-        text: '运算符',
+        text: '逻辑符',
       },
     },
   });

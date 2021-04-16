@@ -24,8 +24,53 @@ export default defineComponent({
         grid: true,
         container: document.getElementById('graph')!,
         background: { color: '#C4E1FF' },
+        connecting: {
+          snap: true,
+          allowBlank: false,
+          allowLoop: false,
+          highlight: true,
+          connector: 'rounded',
+          connectionPoint: 'boundary',
+          router: {
+            name: 'er',
+            args: {
+              direction: 'H', // 上下用V
+            },
+          },
+          createEdge() {
+            return new Shape.Edge({
+              attrs: {
+                line: {
+                  stroke: '#a0a0a0',
+                  strokeWidth: 1,
+                  targetMarker: {
+                    name: 'classic',
+                    size: 7,
+                  },
+                },
+              },
+            });
+          },
+        },
+      });
+      this.graph.on('edge:mouseenter', ({ edge }: any) => {
+        edge.addTools([
+          'source-arrowhead',
+          'target-arrowhead',
+          {
+            name: 'button-remove',
+            args: {
+              distance: -30,
+            },
+          },
+        ]);
       });
 
+      this.graph.on('edge:mouseleave', ({ edge }: any) => {
+        edge.removeTools();
+      });
+      this.graph.addNode(fac.getRect(100, 100));
+      this.graph.addNode(fac.getRectRadius(300, 100));
       this.stencil = new Addon.Stencil({
         target: this.graph,
         title: '组件',
