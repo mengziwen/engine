@@ -53,6 +53,9 @@ export default defineComponent({
           },
         },
       });
+      this.graph.on('node:dblclick', (arg: any) => {
+        console.log(arg);
+      });
       this.graph.on('edge:mouseenter', ({ edge }: any) => {
         edge.addTools([
           'source-arrowhead',
@@ -90,6 +93,20 @@ export default defineComponent({
         fac.getTriangle(),
       ]);
     },
+    renderDia() {
+      return (
+        <a-drawer
+          title='Basic Drawer'
+          placement='right'
+          // v-model:visible="visible"
+          // :after-visible-change="afterVisibleChange"
+        >
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </a-drawer>
+      );
+    },
   },
   render() {
     return (
@@ -112,6 +129,7 @@ export default defineComponent({
           <div id='module'></div>
           <div id='graph'></div>
         </div>
+        {this.renderDia()}
       </div>
     );
   },
