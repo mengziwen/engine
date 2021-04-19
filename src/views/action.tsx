@@ -9,6 +9,7 @@ export default defineComponent({
     return {
       graph: undefined as any,
       stencil: undefined as any,
+      diaVisible: false,
       action: {
         name: '',
         des: '',
@@ -54,7 +55,7 @@ export default defineComponent({
         },
       });
       this.graph.on('node:dblclick', (arg: any) => {
-        console.log(arg);
+        // console.log(arg);
       });
       this.graph.on('edge:mouseenter', ({ edge }: any) => {
         edge.addTools([
@@ -98,7 +99,7 @@ export default defineComponent({
         <a-drawer
           title='Basic Drawer'
           placement='right'
-          // v-model:visible="visible"
+          v-model={[this.diaVisible, 'visible']}
           // :after-visible-change="afterVisibleChange"
         >
           <p>Some contents...</p>
