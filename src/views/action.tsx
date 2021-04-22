@@ -33,9 +33,8 @@ export default defineComponent({
         translating: {
           restrict: true,
         },
-        keyboard: {
-          enabled: true,
-        },
+        keyboard: true,
+        clipboard: true,
         selecting: {
           enabled: true,
           className: 'x6-widget-selection-selected',
@@ -92,6 +91,13 @@ export default defineComponent({
         const cells = this.graph.getSelectedCells();
         this.graph.removeCells(cells);
       });
+      this.graph.bindKey('ctrl+c', (e: KeyboardEvent) => {
+        const cells = this.graph.getSelectedCells();
+        this.graph.copy(cells);
+      });
+      this.graph.bindKey('ctrl+v', (e: KeyboardEvent) => {
+        this.graph.paste();
+      });
       this.graph.on('node:dblclick', (arg: any) => {
         this.selectedObj = arg.node;
         this.diaVisible = true;
@@ -108,7 +114,6 @@ export default defineComponent({
           },
         ]);
       });
-
       this.graph.on('edge:mouseleave', ({ edge }: any) => {
         edge.removeTools();
       });
