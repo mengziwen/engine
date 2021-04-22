@@ -1,6 +1,47 @@
-import { Shape } from '@antv/x6';
+import { Shape, Markup } from '@antv/x6';
 
 const factory: any = {};
+function getGroup(position: any) {
+  return {
+    position: {
+      name: position,
+    },
+    attrs: {
+      circle: {
+        r: 5,
+        magnet: true,
+        stroke: '#31d0c6',
+        strokeWidth: 1,
+        fill: '#fff',
+      },
+    },
+  };
+}
+function getGroups() {
+  const obj = {
+    leftGroup: getGroup('left'),
+    rightGroup: getGroup('right'),
+    topGroup: getGroup('top'),
+    bottomGroup: getGroup('bottom'),
+  };
+  return obj;
+}
+function getItems() {
+  return [
+    {
+      group: 'leftGroup',
+    },
+    {
+      group: 'rightGroup',
+    },
+    {
+      group: 'topGroup',
+    },
+    {
+      group: 'bottomGroup',
+    },
+  ];
+}
 factory.getRect = (x?: number, y?: number) => {
   return new Shape.Rect({
     x,
@@ -17,25 +58,8 @@ factory.getRect = (x?: number, y?: number) => {
       },
     },
     ports: {
-      groups: {
-        point: {
-          position: {
-            name: 'right',
-          },
-          attrs: {
-            circle: {
-              magnet: true,
-              r: 5,
-            },
-          },
-        },
-      },
-      items: [
-        {
-          id: 'port1',
-          group: 'point',
-        },
-      ],
+      groups: getGroups(),
+      items: getItems(),
     },
   });
 };
@@ -56,25 +80,16 @@ factory.getRectRadius = (x?: number, y?: number) => {
       },
     },
     ports: {
-      items: [
-        {
-          id: 'port5',
-          args: {
-            position: {
-              name: 'top',
-            },
-          },
-          attrs: { circle: { r: 5, magnet: true } },
-        },
-      ],
+      groups: getGroups(),
+      items: getItems(),
     },
   });
 };
 factory.getRhombus = () => {
   return new Shape.Polygon({
-    width: 60,
-    height: 60,
-    points: '0,10 10,0 20,10 10,20',
+    width: 90,
+    height: 50,
+    points: '0,10 20,0 40,10 20,20',
     attrs: {
       body: {
         fill: 'Darkorange',
@@ -82,6 +97,10 @@ factory.getRhombus = () => {
       label: {
         text: '判断',
       },
+    },
+    ports: {
+      groups: getGroups(),
+      items: getItems(),
     },
   });
 };
@@ -98,6 +117,10 @@ factory.getTrapezoid = () => {
         text: 'switch',
       },
     },
+    ports: {
+      groups: getGroups(),
+      items: getItems(),
+    },
   });
 };
 factory.getEllipse = () => {
@@ -111,6 +134,10 @@ factory.getEllipse = () => {
       label: {
         text: '规则',
       },
+    },
+    ports: {
+      groups: getGroups(),
+      items: getItems(),
     },
   });
 };
@@ -126,6 +153,10 @@ factory.getCircle = () => {
         text: '运算符',
       },
     },
+    ports: {
+      groups: getGroups(),
+      items: getItems(),
+    },
   });
 };
 factory.getSquare = () => {
@@ -139,6 +170,10 @@ factory.getSquare = () => {
       label: {
         text: '常数',
       },
+    },
+    ports: {
+      groups: getGroups(),
+      items: getItems(),
     },
   });
 };
@@ -155,6 +190,10 @@ factory.getTriangle = () => {
         y: 12,
         text: '逻辑符',
       },
+    },
+    ports: {
+      groups: getGroups(),
+      items: getItems(),
     },
   });
 };

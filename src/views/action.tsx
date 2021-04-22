@@ -9,10 +9,14 @@ export default defineComponent({
     return {
       graph: undefined as any,
       stencil: undefined as any,
-      diaVisible: false,
       action: {
         name: '',
         des: '',
+      },
+      diaVisible: false,
+      selectedObj: undefined as any,
+      diaValue: {
+        name: '',
       },
     };
   },
@@ -25,6 +29,18 @@ export default defineComponent({
         grid: true,
         container: document.getElementById('graph')!,
         background: { color: '#C4E1FF' },
+        // 禁止出画布
+        translating: {
+          restrict: true,
+        },
+        keyboard: {
+          enabled: true,
+        },
+        selecting: {
+          enabled: true,
+          className: 'x6-widget-selection-selected',
+          showNodeSelectionBox: true,
+        },
         connecting: {
           snap: true,
           allowBlank: false,
@@ -32,17 +48,12 @@ export default defineComponent({
           highlight: true,
           connector: 'rounded',
           connectionPoint: 'boundary',
-          router: {
-            name: 'er',
-            args: {
-              direction: 'H', // 上下用V
-            },
-          },
+          router: 'metro',
           createEdge() {
             return new Shape.Edge({
               attrs: {
                 line: {
-                  stroke: '#a0a0a0',
+                  // stroke: '#a0a0a0',
                   strokeWidth: 1,
                   targetMarker: {
                     name: 'classic',
@@ -54,25 +65,7 @@ export default defineComponent({
           },
         },
       });
-      this.graph.on('node:dblclick', (arg: any) => {
-        // console.log(arg);
-      });
-      this.graph.on('edge:mouseenter', ({ edge }: any) => {
-        edge.addTools([
-          'source-arrowhead',
-          'target-arrowhead',
-          {
-            name: 'button-remove',
-            args: {
-              distance: -30,
-            },
-          },
-        ]);
-      });
-
-      this.graph.on('edge:mouseleave', ({ edge }: any) => {
-        edge.removeTools();
-      });
+      this.graphEvent();
       this.graph.addNode(fac.getRect(100, 100));
       this.graph.addNode(fac.getRectRadius(300, 100));
       this.stencil = new Addon.Stencil({
@@ -94,17 +87,62 @@ export default defineComponent({
         fac.getTriangle(),
       ]);
     },
+    graphEvent() {
+      this.graph.bindKey('del', (e: KeyboardEvent) => {
+        const cells = this.graph.getSelectedCells();
+        this.graph.removeCells(cells);
+      });
+      this.graph.on('node:dblclick', (arg: any) => {
+        this.selectedObj = arg.node;
+        this.diaVisible = true;
+      });
+      this.graph.on('edge:mouseenter', ({ edge }: any) => {
+        edge.addTools([
+          'source-arrowhead',
+          'target-arrowhead',
+          {
+            name: 'button-remove',
+            args: {
+              distance: -50,
+            },
+          },
+        ]);
+      });
+
+      this.graph.on('edge:mouseleave', ({ edge }: any) => {
+        edge.removeTools();
+      });
+    },
+    setDiaVal() {
+      this.selectedObj.attr('label/text', this.diaValue.name);
+      this.diaVisible = false;
+    },
+    save() {
+      const str = this.graph.toJSON();
+      console.log(str);
+    },
     renderDia() {
       return (
         <a-drawer
-          title='Basic Drawer'
+          class='comDra'
+          title='详细信息'
           placement='right'
           v-model={[this.diaVisible, 'visible']}
-          // :after-visible-change="afterVisibleChange"
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <div>
+            名称：
+            <a-input v-model={[this.diaValue.name, 'value']} />
+            <div class='buttons'>
+              <a-button
+                type='primary'
+                onClick={() => {
+                  this.setDiaVal();
+                }}
+              >
+                确定
+              </a-button>
+            </div>
+          </div>
         </a-drawer>
       );
     },
@@ -114,7 +152,7 @@ export default defineComponent({
       <div class='action'>
         <div class='flex info'>
           <div class='flex1 flex ele'>
-            <div class='name'>动作名称：</div>
+            <div class='name'>名称：</div>
             <div class='flex1'>
               <a-input v-model={[this.action.name, 'value']}></a-input>
             </div>
@@ -129,6 +167,16 @@ export default defineComponent({
         <div class='flex drag'>
           <div id='module'></div>
           <div id='graph'></div>
+        </div>
+        <div class='buttons'>
+          <a-button
+            type='primary'
+            onClick={() => {
+              this.save();
+            }}
+          >
+            保存
+          </a-button>
         </div>
         {this.renderDia()}
       </div>

@@ -1,15 +1,22 @@
 .action {
-  margin: 20px;
+  margin: 20px 0;
   .name {
     line-height: 32px;
+  }
+  .info {
+    padding: 0 10px;
+    .ele {
+      margin-right: 10px;
+    }
   }
   .drag {
     margin-top: 20px;
     #graph {
-      width: 800px;
+      flex: 1;
       height: 600px;
     }
     #module {
+      flex: 0 0 280px;
       .x6-widget-stencil {
         position: inherit;
         &::after {
@@ -20,5 +27,16 @@
         }
       }
     }
+  }
+  .buttons {
+    margin: 10px;
+    text-align: right;
+  }
+}
+
+.comDra {
+  .buttons {
+    margin: 10px 0;
+    text-align: right;
   }
 }

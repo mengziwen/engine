@@ -41,6 +41,7 @@ const routerRow: RouteRecordRaw = {
           component: () => import('@/views/functionList'),
         },
         { path: '/action', component: () => import('@/views/action') },
+        { path: '/actionList', component: () => import('@/views/actionList') },
       ],
     },
   ],
