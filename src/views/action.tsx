@@ -138,7 +138,6 @@ export default defineComponent({
     },
     save() {
       const str = this.graph.toJSON();
-      console.log(str);
     },
     renderDia() {
       return (
