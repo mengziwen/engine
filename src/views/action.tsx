@@ -140,7 +140,6 @@ export default defineComponent({
     },
     async save() {
       const str = this.graph.toJSON();
-      console.log(str);
       const par = {
         graphInfo: str,
       };
