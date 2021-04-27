@@ -36,8 +36,16 @@ export default defineComponent({
           slots: { customRender: 'operation' },
         },
       ],
-      code: '',
+      funCode: '',
       time: [] as any[],
+      diaShow: false,
+      dia: {
+        param: '',
+        context: '',
+        code: '',
+        res: '',
+        funCode: '',
+      },
     };
   },
   mounted() {
@@ -45,7 +53,7 @@ export default defineComponent({
   },
   methods: {
     async getData() {
-      const par: any = { searchTag: this.code };
+      const par: any = { searchTag: this.funCode };
       if (this.time.length !== 0) {
         par.startTime = this.time[0].valueOf();
         par.endTime = this.time[1].valueOf();
@@ -77,16 +85,9 @@ export default defineComponent({
         `/fsmEdge/v1/define/getScriptDetails/${funcName}`,
       );
       const str = res.data.scriptSourceCode;
-      const code = codeUtil.unCode(str);
-      notification.open({
-        message: '结果',
-        description: code,
-        duration: null,
-        style: {
-          width: '1000px',
-          marginLeft: `${335 - 1000}px`,
-        },
-      });
+      this.dia.code = codeUtil.unCode(str);
+      this.dia.funCode = funcName;
+      this.diaShow = true;
     },
     customRender() {
       const obj: any = {};
@@ -123,13 +124,59 @@ export default defineComponent({
 
       return obj;
     },
+    async test() {
+      const par: any = {
+        scriptCode: this.dia.funCode,
+      };
+      par.param = this.dia.param ? JSON.parse(this.dia.param) : {};
+      par.ctx = this.dia.context ? JSON.parse(this.dia.context) : {};
+      const res = await this.$axios.post('/fsmEdge/v1/ruleFunc/testRun', par);
+      this.dia.res = JSON.stringify(res.data, null, 2);
+    },
+    renderDia() {
+      return (
+        <a-modal
+          class='funPreviewDia'
+          v-model={[this.diaShow, 'visible']}
+          title='预览'
+          width='1200px'
+          cancelText='关闭'
+          okText='执行'
+          onOk={() => {
+            this.test();
+          }}
+        >
+          <div class='flex'>
+            <div class='flex1 flex item'>
+              <div>参数：</div>
+              <div class='flex1'>
+                <a-input v-model={[this.dia.param, 'value']} />
+              </div>
+            </div>
+            <div class='flex1 flex item'>
+              <div>上下文：</div>
+              <div class='flex1'>
+                <a-input v-model={[this.dia.context, 'value']} />
+              </div>
+            </div>
+          </div>
+          <div class='preview flex'>
+            <div class='code'>
+              <a-textarea v-model={[this.dia.code, 'value']} autoSize={true} />
+            </div>
+            <pre class='res'>{this.dia.res}</pre>
+          </div>
+        </a-modal>
+      );
+    },
   },
+
   render() {
     return (
       <div class='list'>
         <div class='flex tools'>
           <span>函数名：</span>
-          <a-input class='input' v-model={[this.code, 'value']} />
+          <a-input class='input' v-model={[this.funCode, 'value']} />
           <span>修改时间：</span>
           <a-range-picker class='timeInput' v-model={[this.time, 'value']} />
           <a-button
@@ -155,6 +202,7 @@ export default defineComponent({
           rowKey='id'
           vSlots={this.customRender()}
         />
+        {this.renderDia()}
       </div>
     );
   },

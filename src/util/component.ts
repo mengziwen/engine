@@ -61,6 +61,9 @@ factory.getRect = (x?: number, y?: number) => {
       groups: getGroups(),
       items: getItems(),
     },
+    data: {
+      type: 'action',
+    },
   });
 };
 factory.getRectRadius = (x?: number, y?: number) => {
@@ -85,8 +88,10 @@ factory.getRectRadius = (x?: number, y?: number) => {
     },
   });
 };
-factory.getRhombus = () => {
+factory.getRhombus = (x?: number, y?: number) => {
   return new Shape.Polygon({
+    x,
+    y,
     width: 90,
     height: 50,
     points: '0,10 20,0 40,10 20,20',
@@ -104,8 +109,10 @@ factory.getRhombus = () => {
     },
   });
 };
-factory.getTrapezoid = () => {
+factory.getTrapezoid = (x?: number, y?: number) => {
   return new Shape.Polygon({
+    x,
+    y,
     width: 100,
     height: 40,
     points: '5,0 25,0 20,10 0,10',
@@ -123,8 +130,10 @@ factory.getTrapezoid = () => {
     },
   });
 };
-factory.getEllipse = () => {
+factory.getEllipse = (x?: number, y?: number) => {
   return new Shape.Ellipse({
+    x,
+    y,
     width: 90,
     height: 45,
     attrs: {
@@ -141,8 +150,10 @@ factory.getEllipse = () => {
     },
   });
 };
-factory.getCircle = () => {
+factory.getCircle = (x?: number, y?: number) => {
   return new Shape.Circle({
+    x,
+    y,
     width: 60,
     height: 60,
     attrs: {
@@ -157,10 +168,15 @@ factory.getCircle = () => {
       groups: getGroups(),
       items: getItems(),
     },
+    data: {
+      type: 'OPERATOR',
+    },
   });
 };
-factory.getSquare = () => {
+factory.getSquare = (x?: number, y?: number) => {
   return new Shape.Rect({
+    x,
+    y,
     width: 60,
     height: 60,
     attrs: {
@@ -168,17 +184,22 @@ factory.getSquare = () => {
         fill: 'grey',
       },
       label: {
-        text: '常数',
+        text: '常量',
       },
     },
     ports: {
       groups: getGroups(),
       items: getItems(),
     },
+    data: {
+      type: 'CONSTANT',
+    },
   });
 };
-factory.getTriangle = () => {
+factory.getTriangle = (x?: number, y?: number) => {
   return new Shape.Polygon({
+    x,
+    y,
     width: 70,
     height: 60,
     points: '100,0 200,173 0,173',

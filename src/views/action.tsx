@@ -1,10 +1,14 @@
 import { defineComponent, reactive, ref } from 'vue';
 import { Graph, Shape, Addon } from '@antv/x6';
 import fac from '@/util/component';
+import comDetail from '@/components/comDetail';
 
 import '@/assets/less/action.less';
 
 export default defineComponent({
+  components: {
+    comDetail,
+  },
   data() {
     return {
       graph: undefined as any,
@@ -15,7 +19,7 @@ export default defineComponent({
       },
       diaVisible: false,
       selectedObj: undefined as any,
-      diaValue: {
+      diaObj: {
         name: '',
       },
     };
@@ -27,6 +31,7 @@ export default defineComponent({
     initGraph() {
       this.graph = new Graph({
         grid: true,
+        snapline: true,
         container: document.getElementById('graph')!,
         background: { color: '#C4E1FF' },
         // 禁止出画布
@@ -35,6 +40,7 @@ export default defineComponent({
         },
         keyboard: true,
         clipboard: true,
+        history: true,
         selecting: {
           enabled: true,
           className: 'x6-widget-selection-selected',
@@ -65,8 +71,8 @@ export default defineComponent({
         },
       });
       this.graphEvent();
-      this.graph.addNode(fac.getRect(100, 100));
-      this.graph.addNode(fac.getRectRadius(300, 100));
+      this.graph.addNode(fac.getSquare(100, 100));
+      this.graph.addNode(fac.getCircle(300, 100));
       this.stencil = new Addon.Stencil({
         target: this.graph,
         title: '组件',
@@ -98,8 +104,15 @@ export default defineComponent({
       this.graph.bindKey('ctrl+v', (e: KeyboardEvent) => {
         this.graph.paste();
       });
+      this.graph.bindKey('ctrl+z', (e: KeyboardEvent) => {
+        this.graph.undo();
+      });
+      this.graph.bindKey('ctrl+y', (e: KeyboardEvent) => {
+        this.graph.redo();
+      });
       this.graph.on('node:dblclick', (arg: any) => {
-        this.selectedObj = arg.node;
+        this.selectedObj = arg.node.store;
+        this.diaObj = { ...this.diaObj, ...this.selectedObj };
         this.diaVisible = true;
       });
       this.graph.on('edge:mouseenter', ({ edge }: any) => {
@@ -118,8 +131,9 @@ export default defineComponent({
         edge.removeTools();
       });
     },
-    setDiaVal() {
-      this.selectedObj.attr('label/text', this.diaValue.name);
+    setDiaVal(res: any) {
+      this.selectedObj.data = res;
+      this.selectedObj.attr('label/text', this.diaObj.name);
       this.diaVisible = false;
     },
     save() {
@@ -135,18 +149,12 @@ export default defineComponent({
           v-model={[this.diaVisible, 'visible']}
         >
           <div>
-            名称：
-            <a-input v-model={[this.diaValue.name, 'value']} />
-            <div class='buttons'>
-              <a-button
-                type='primary'
-                onClick={() => {
-                  this.setDiaVal();
-                }}
-              >
-                确定
-              </a-button>
-            </div>
+            <comDetail
+              com={this.diaObj}
+              onOk={(res: any) => {
+                this.setDiaVal(res);
+              }}
+            />
           </div>
         </a-drawer>
       );
