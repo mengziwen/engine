@@ -128,7 +128,7 @@ export default defineComponent({
       const par: any = {
         scriptCode: this.dia.funCode,
       };
-      par.param = this.dia.param ? JSON.parse(this.dia.param) : {};
+      par.args = this.dia.param ? JSON.parse(this.dia.param) : {};
       par.ctx = this.dia.context ? JSON.parse(this.dia.context) : {};
       const res = await this.$axios.post('/fsmEdge/v1/ruleFunc/testRun', par);
       this.dia.res = JSON.stringify(res.data, null, 2);

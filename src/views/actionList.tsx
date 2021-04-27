@@ -33,6 +33,7 @@ export default defineComponent({
       ],
       code: '',
       time: [] as any[],
+      test: '',
     };
   },
   mounted() {
@@ -129,8 +130,8 @@ export default defineComponent({
           <a-range-picker class='timeInput' v-model={[this.time, 'value']} />
           <a-button
             type='primary'
-            onClick={() => {
-              this.getData();
+            onClick={async () => {
+              // this.getData();
             }}
           >
             搜索
@@ -143,6 +144,7 @@ export default defineComponent({
           >
             新建
           </a-button>
+          {this.test}
         </div>
         <a-table
           dataSource={this.dataSource}

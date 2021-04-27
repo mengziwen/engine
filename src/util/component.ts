@@ -62,7 +62,7 @@ factory.getRect = (x?: number, y?: number) => {
       items: getItems(),
     },
     data: {
-      type: 'action',
+      nodeType: 'action',
     },
   });
 };
@@ -169,7 +169,7 @@ factory.getCircle = (x?: number, y?: number) => {
       items: getItems(),
     },
     data: {
-      type: 'OPERATOR',
+      nodeType: 'OPERATOR',
     },
   });
 };
@@ -192,7 +192,7 @@ factory.getSquare = (x?: number, y?: number) => {
       items: getItems(),
     },
     data: {
-      type: 'CONSTANT',
+      nodeType: 'CONSTANT',
     },
   });
 };

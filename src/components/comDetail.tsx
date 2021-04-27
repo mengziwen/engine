@@ -3,11 +3,14 @@ import { defineComponent, reactive, onMounted, getCurrentInstance } from 'vue';
 export default defineComponent({
   props: ['com'],
   setup(props: any, context) {
-    const resData: any = {};
     const state = reactive({
       fun: { name: '', id: '', paramDefineList: [], funName: '' },
       funOption: [],
       funAll: [],
+      resData: {
+        value: '',
+        valueType: '',
+      },
     });
     onMounted(() => {
       const { proxy }: any = getCurrentInstance();
@@ -43,7 +46,7 @@ export default defineComponent({
       state.funOption = arr;
     };
     const handleOk = () => {
-      context.emit('ok', resData);
+      context.emit('ok', state.resData);
     };
     const renderFun = () => {
       return (
@@ -87,11 +90,21 @@ export default defineComponent({
         <div>
           <div>
             常量值：
-            <a-input v-model={resData.value} />
+            <a-input v-model={[state.resData.value, 'value']} />
           </div>
           <div>
             常量类型：
-            <a-input v-model={resData.type} />
+            <a-input v-model={[state.resData.valueType, 'value']} />
+          </div>
+        </div>
+      );
+    };
+    const renderOperator = () => {
+      return (
+        <div>
+          <div>
+            运算符：
+            <a-input v-model={[state.resData.value, 'value']} />
           </div>
         </div>
       );
@@ -99,18 +112,22 @@ export default defineComponent({
     return {
       renderFun,
       renderConstant,
+      renderOperator,
       handleOk,
       state,
     };
   },
   render() {
     let dom: JSX.Element = '';
-    switch (this.com.data.data.type) {
+    switch (this.com.data.data.nodeType) {
       case 'fun':
         dom = this.renderFun();
         break;
       case 'CONSTANT':
         dom = this.renderConstant();
+        break;
+      case 'OPERATOR':
+        dom = this.renderOperator();
         break;
       default:
         dom = '';

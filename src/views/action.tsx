@@ -15,6 +15,8 @@ export default defineComponent({
       stencil: undefined as any,
       action: {
         name: '',
+        recordCode: '',
+        moduleCode: '',
         des: '',
       },
       diaVisible: false,
@@ -131,13 +133,18 @@ export default defineComponent({
         edge.removeTools();
       });
     },
-    setDiaVal(res: any) {
-      this.selectedObj.data = res;
-      this.selectedObj.attr('label/text', this.diaObj.name);
+    async setDiaVal(res: any) {
+      this.selectedObj.data.data = { ...this.selectedObj.data.data, ...res };
+      // this.selectedObj.attr('label/text', this.diaObj.name);
       this.diaVisible = false;
     },
-    save() {
+    async save() {
       const str = this.graph.toJSON();
+      console.log(str);
+      const par = {
+        graphInfo: str,
+      };
+      // const res = await this.$axios.post('/fsmEdge/v1/componentGraph/save');
     },
     renderDia() {
       return (
@@ -167,6 +174,18 @@ export default defineComponent({
             <div class='name'>名称：</div>
             <div class='flex1'>
               <a-input v-model={[this.action.name, 'value']}></a-input>
+            </div>
+          </div>
+          <div class='flex1 flex ele'>
+            <div class='name'>code</div>
+            <div class='flex1'>
+              <a-input v-model={[this.action.recordCode, 'value']}></a-input>
+            </div>
+          </div>
+          <div class='flex1 flex ele'>
+            <div class='name'>模块：</div>
+            <div class='flex1'>
+              <a-input v-model={[this.action.moduleCode, 'value']}></a-input>
             </div>
           </div>
           <div class='flex1 flex ele'>
