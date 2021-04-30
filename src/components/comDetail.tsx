@@ -1,18 +1,39 @@
-import { defineComponent, reactive, onMounted, getCurrentInstance } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  onMounted,
+  getCurrentInstance,
+  watch,
+} from 'vue';
 
 export default defineComponent({
   props: ['com'],
   setup(props: any, context) {
     const state = reactive({
-      fun: { name: '', id: '', paramDefineList: [], funName: '' },
+      fun: {},
       funOption: [],
       funAll: [],
       resData: {
         value: '',
         valueType: '',
+        name: '',
+        paramList: [],
+        funcName: '',
+        resField: '',
       },
     });
+    const resetObj = (obj: any) => {
+      for (const key in obj) {
+        obj[key] = '';
+      }
+    };
+    watch(props, () => {
+      resetObj(state.resData);
+      state.resData = { ...state.resData, ...props.com.data.data };
+    });
     onMounted(() => {
+      resetObj(state.resData);
+      state.resData = { ...state.resData, ...props.com.data.data };
       const { proxy }: any = getCurrentInstance();
       proxy.$axios
         .get('/fsmEdge/v1/define/getAllMethodDefinition')
@@ -33,8 +54,12 @@ export default defineComponent({
     const handleChange = (val: string) => {
       state.funAll.forEach((element: any) => {
         if (element.funcName === val) {
-          state.fun = element;
-          state.fun.funName = element.funcName;
+          state.resData.name = element.name;
+          state.resData.funcName = element.funcName;
+          state.resData.paramList = element.paramDefineList || [];
+          state.resData.paramList.forEach((par: any) => {
+            par.paramCode = par.defineCode;
+          });
         }
       });
       const arr = state.funAll.filter((ele: any) => {
@@ -54,7 +79,7 @@ export default defineComponent({
           输入函数名或code：
           <a-select
             show-search
-            v-model={[state.fun.funName, 'value']}
+            v-model={[state.resData.funcName, 'value']}
             placeholder='input search text'
             notFoundContent={null}
             filter-option={false}
@@ -74,14 +99,28 @@ export default defineComponent({
               );
             })}
           </a-select>
-          {state.fun.paramDefineList.map((ele: any) => {
+          {state.resData.paramList.map((ele: any) => {
             return (
               <div class='flex line'>
                 <div class='name'>{ele.name}：</div>
-                <a-input v-model={[ele.value, 'value']} />
+                <div class='flex1'>
+                  <a-input v-model={[ele.value, 'value']} />
+                </div>
               </div>
             );
           })}
+          <div class='flex line'>
+            <div class='name'>返回字段：</div>
+            <div class='flex1'>
+              <a-input v-model={[state.resData.resField, 'value']} />
+            </div>
+          </div>
+          <div class='flex line'>
+            <div class='name'>返回类型：</div>
+            <div class='flex1'>
+              <a-input v-model={[state.resData.valueType, 'value']} />
+            </div>
+          </div>
         </div>
       );
     };
@@ -109,38 +148,46 @@ export default defineComponent({
         </div>
       );
     };
-    return {
-      renderFun,
-      renderConstant,
-      renderOperator,
-      handleOk,
-      state,
+    const renderTrigger = () => {
+      return (
+        <div>
+          <div>
+            类型：
+            <a-input v-model={[state.resData.value, 'value']} />
+          </div>
+        </div>
+      );
     };
-  },
-  render() {
-    let dom: JSX.Element = '';
-    switch (this.com.data.data.nodeType) {
-      case 'fun':
-        dom = this.renderFun();
-        break;
-      case 'CONSTANT':
-        dom = this.renderConstant();
-        break;
-      case 'OPERATOR':
-        dom = this.renderOperator();
-        break;
-      default:
-        dom = '';
-    }
-    return (
+
+    const renderDetail = () => {
+      let dom: JSX.Element = '';
+      switch (props.com.data.data.nodeType) {
+        case 'FUNCTION':
+          dom = renderFun();
+          break;
+        case 'CONSTANT':
+          dom = renderConstant();
+          break;
+        case 'OPERATOR':
+          dom = renderOperator();
+          break;
+        case 'TRIGGER':
+          dom = renderTrigger();
+          break;
+        default:
+          dom = '';
+      }
+      return dom;
+    };
+    return () => (
       <div>
-        {dom}
+        {renderDetail()}
         <div>
           <div class='buttons'>
             <a-button
               type='primary'
               onClick={() => {
-                this.handleOk();
+                handleOk();
               }}
             >
               确定

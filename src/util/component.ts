@@ -53,7 +53,7 @@ factory.getRect = (x?: number, y?: number) => {
         fill: 'blue',
       },
       label: {
-        text: '决策',
+        text: '触发器',
         fill: 'white',
       },
     },
@@ -62,7 +62,7 @@ factory.getRect = (x?: number, y?: number) => {
       items: getItems(),
     },
     data: {
-      nodeType: 'action',
+      nodeType: 'TRIGGER',
     },
   });
 };
@@ -85,6 +85,9 @@ factory.getRectRadius = (x?: number, y?: number) => {
     ports: {
       groups: getGroups(),
       items: getItems(),
+    },
+    data: {
+      nodeType: 'FUNCTION',
     },
   });
 };

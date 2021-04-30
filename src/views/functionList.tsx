@@ -111,13 +111,13 @@ export default defineComponent({
             >
               编辑
             </a-button>
-            <a-button
+            {/* <a-button
               onClick={() => {
                 this.deleteData(prop.text);
               }}
             >
               删除
-            </a-button>
+            </a-button> */}
           </div>
         );
       };

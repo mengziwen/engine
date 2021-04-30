@@ -28,8 +28,18 @@ export default defineComponent({
   },
   mounted() {
     this.initGraph();
+    if (this.$route.query.id) {
+      this.getData();
+    }
   },
   methods: {
+    async getData() {
+      const res = await this.$axios.get(
+        `/fsmEdge/v1/componentGraph/getById/${this.$route.query.id}`,
+      );
+      this.graph.fromJSON(res.data[0].cells);
+      [, this.action] = res.data;
+    },
     initGraph() {
       this.graph = new Graph({
         grid: true,
@@ -114,7 +124,7 @@ export default defineComponent({
       });
       this.graph.on('node:dblclick', (arg: any) => {
         this.selectedObj = arg.node.store;
-        this.diaObj = { ...this.diaObj, ...this.selectedObj };
+        this.diaObj = { ...this.selectedObj };
         this.diaVisible = true;
       });
       this.graph.on('edge:mouseenter', ({ edge }: any) => {
@@ -139,11 +149,38 @@ export default defineComponent({
       this.diaVisible = false;
     },
     async save() {
-      const str = this.graph.toJSON();
+      const cells = this.graph.toJSON();
+      const nodes = cells.cells.filter((ele: any) => {
+        return ele.shape !== 'edge';
+      });
+      const lines = cells.cells.filter((ele: any) => {
+        return ele.shape === 'edge';
+      });
       const par = {
-        graphInfo: str,
+        ...this.action,
+        enabled: true,
+        graphInfo: cells,
+        recordType: 0,
+        nodeList: [] as any[],
       };
-      // const res = await this.$axios.post('/fsmEdge/v1/componentGraph/save');
+      nodes.forEach((node: any) => {
+        const resNode = {
+          interfaceId: node.id,
+          nodeCode: node.id,
+          rulesComponent: { ...node.data },
+        };
+        // 查看是否有连接线
+        lines.forEach((line: any) => {
+          if (node.id === line.source.cell) {
+            resNode.rulesComponent.nextNodeCode = line.target.cell;
+          }
+        });
+        par.nodeList.push(resNode);
+      });
+      const res = await this.$axios.post(
+        '/fsmEdge/v1/componentGraph/save',
+        par,
+      );
     },
     renderDia() {
       return (
@@ -151,6 +188,7 @@ export default defineComponent({
           class='comDra'
           title='详细信息'
           placement='right'
+          width='300px'
           v-model={[this.diaVisible, 'visible']}
         >
           <div>
@@ -176,7 +214,7 @@ export default defineComponent({
             </div>
           </div>
           <div class='flex1 flex ele'>
-            <div class='name'>code</div>
+            <div class='name'>code：</div>
             <div class='flex1'>
               <a-input v-model={[this.action.recordCode, 'value']}></a-input>
             </div>

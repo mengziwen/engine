@@ -11,23 +11,25 @@ export default defineComponent({
       columns: [
         {
           title: '规则名称',
-          dataIndex: 'treeName',
-          key: 'treeName',
+          dataIndex: 'name',
+          key: 'name',
         },
         {
-          title: 'treeCode',
-          dataIndex: 'treeCode',
-          key: 'treeCode',
+          title: 'code',
+          dataIndex: 'recordCode',
+          key: 'recordCode',
         },
         {
           title: '创建时间',
           dataIndex: 'createTime',
           key: 'createTime',
+          slots: { customRender: 'time' },
         },
         {
           title: '更新时间',
           dataIndex: 'updateTime',
           key: 'updateTime',
+          slots: { customRender: 'time' },
         },
         {
           title: '操作',
@@ -40,10 +42,45 @@ export default defineComponent({
       time: [] as any[],
     };
   },
-  mounted() {},
+  mounted() {
+    this.getData();
+  },
   methods: {
+    async getData() {
+      const res = await this.$axios.post('/fsmEdge/v1/componentGraph/search', {
+        pageNum: 1,
+        pageSize: 1000,
+      });
+      this.dataSource = res.data.list;
+    },
     customRender() {
       const obj: any = {};
+      obj.operation = (prop: any) => {
+        return (
+          <div>
+            <a-button
+              onClick={() => {
+                this.$router.push({
+                  path: '/action',
+                  query: { id: prop.text, type: 0 },
+                });
+              }}
+            >
+              编辑
+            </a-button>
+            <a-button
+              onClick={() => {
+                // this.deleteData(prop.text);
+              }}
+            >
+              删除
+            </a-button>
+          </div>
+        );
+      };
+      obj.time = (prop: any) => {
+        return moment(prop.text).format('lll');
+      };
       return obj;
     },
   },
