@@ -83,7 +83,7 @@ export default defineComponent({
         },
       });
       this.graphEvent();
-      this.graph.addNode(fac.getSquare(100, 100));
+      this.graph.addNode(fac.getRect(100, 100));
       this.graph.addNode(fac.getCircle(300, 100));
       this.stencil = new Addon.Stencil({
         target: this.graph,
@@ -188,7 +188,7 @@ export default defineComponent({
           class='comDra'
           title='详细信息'
           placement='right'
-          width='300px'
+          width='350px'
           v-model={[this.diaVisible, 'visible']}
         >
           <div>
