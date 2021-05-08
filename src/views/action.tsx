@@ -39,6 +39,16 @@ export default defineComponent({
       const res = await this.$axios.get(
         `/fsmEdge/v1/componentGraph/getById/${this.$route.query.id}`,
       );
+      res.data[0].cells.forEach((ele: any) => {
+        if (ele.shape !== 'edge') {
+          for (let i = 1; i < res.data[1].nodeList.length; i += 1) {
+            const item = res.data[1].nodeList[i];
+            if (ele.id === item.interfaceId) {
+              ele.attrs.label.text += item.resValue || '';
+            }
+          }
+        }
+      });
       this.graph.fromJSON(res.data[0].cells);
       [, this.action] = res.data;
     },

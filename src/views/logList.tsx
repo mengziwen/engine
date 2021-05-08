@@ -32,7 +32,7 @@ export default defineComponent({
         },
       ],
       code: '',
-      time: [moment(), moment().subtract(1, 'hours')],
+      time: [moment().subtract(1, 'hours'), moment()],
       test: '',
     };
   },
