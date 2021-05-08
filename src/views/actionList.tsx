@@ -46,7 +46,8 @@ export default defineComponent({
         par.startTime = this.time[0].valueOf();
         par.endTime = this.time[1].valueOf();
       }
-      const res = await this.$axios.post('/fsmEdge/v1/ruleExpression/search', {
+      const res = await this.$axios.post('/fsmEdge/v1/componentGraph/search', {
+        recordType: 1,
         pageNum: 1,
         pageSize: 1000,
         ...par,
@@ -59,7 +60,7 @@ export default defineComponent({
     },
     async deleteData(id: any) {
       const res: any = await this.$axios.delete(
-        `/fsmEdge/v1/ruleExpression/deleteTree/${id}`,
+        `/fsmEdge/v1/componentGraph/delete/${id}`,
       );
       if (res.code === 'M0000') {
         message.success('删除成功');
@@ -99,8 +100,8 @@ export default defineComponent({
             <a-button
               onClick={() => {
                 this.$router.push({
-                  path: '/tree',
-                  query: { id: prop.text },
+                  path: '/action',
+                  query: { id: prop.text, recordType: 1 },
                 });
               }}
             >
@@ -131,7 +132,7 @@ export default defineComponent({
           <a-button
             type='primary'
             onClick={async () => {
-              // this.getData();
+              this.getData();
             }}
           >
             搜索
@@ -139,7 +140,10 @@ export default defineComponent({
           <a-button
             type='primary'
             onClick={() => {
-              this.$router.push('action');
+              this.$router.push({
+                path: '/action',
+                query: { recordType: 1 },
+              });
             }}
           >
             新建

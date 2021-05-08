@@ -42,6 +42,7 @@ const routerRow: RouteRecordRaw = {
         },
         { path: '/action', component: () => import('@/views/action') },
         { path: '/actionList', component: () => import('@/views/actionList') },
+        { path: '/logList', component: () => import('@/views/logList') },
       ],
     },
   ],

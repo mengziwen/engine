@@ -11,6 +11,7 @@ export default defineComponent({
   },
   data() {
     return {
+      recordType: 0 as any, // 0规则 1决策
       graph: undefined as any,
       stencil: undefined as any,
       action: {
@@ -28,6 +29,7 @@ export default defineComponent({
   },
   mounted() {
     this.initGraph();
+    this.recordType = this.$route.query.recordType;
     if (this.$route.query.id) {
       this.getData();
     }
@@ -83,8 +85,7 @@ export default defineComponent({
         },
       });
       this.graphEvent();
-      this.graph.addNode(fac.getRect(100, 100));
-      this.graph.addNode(fac.getCircle(300, 100));
+      this.graph.addNode(fac.getEllipse(100, 100));
       this.stencil = new Addon.Stencil({
         target: this.graph,
         title: '组件',
@@ -160,7 +161,7 @@ export default defineComponent({
         ...this.action,
         enabled: true,
         graphInfo: cells,
-        recordType: 0,
+        recordType: this.recordType,
         nodeList: [] as any[],
       };
       nodes.forEach((node: any) => {

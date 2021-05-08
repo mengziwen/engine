@@ -10,26 +10,19 @@ export default defineComponent({
       dataSource: [],
       columns: [
         {
-          title: '规则名称',
-          dataIndex: 'name',
-          key: 'name',
-        },
-        {
-          title: 'code',
-          dataIndex: 'recordCode',
-          key: 'recordCode',
+          title: '日志名称',
+          dataIndex: 'treeName',
+          key: 'treeName',
         },
         {
           title: '创建时间',
           dataIndex: 'createTime',
           key: 'createTime',
-          slots: { customRender: 'time' },
         },
         {
           title: '更新时间',
           dataIndex: 'updateTime',
           key: 'updateTime',
-          slots: { customRender: 'time' },
         },
         {
           title: '操作',
@@ -39,7 +32,8 @@ export default defineComponent({
         },
       ],
       code: '',
-      time: [] as any[],
+      time: [moment(), moment().subtract(1, 'hours')],
+      test: '',
     };
   },
   mounted() {
@@ -53,16 +47,20 @@ export default defineComponent({
         par.endTime = this.time[1].valueOf();
       }
       const res = await this.$axios.post('/fsmEdge/v1/componentGraph/search', {
-        recordType: 0,
+        recordType: 1,
         pageNum: 1,
         pageSize: 1000,
         ...par,
+      });
+      res.data.list.forEach((ele: any) => {
+        ele.createTime = moment(ele.createTime).format('lll');
+        ele.updateTime = moment(ele.updateTime).format('lll');
       });
       this.dataSource = res.data.list;
     },
     async deleteData(id: any) {
       const res: any = await this.$axios.delete(
-        `/fsmEdge/v1/componentGraph/delete/${id}`,
+        `/fsmEdge/v1/ruleExpression/deleteTree/${id}`,
       );
       if (res.code === 'M0000') {
         message.success('删除成功');
@@ -71,6 +69,22 @@ export default defineComponent({
         message.error('服务异常');
       }
     },
+    async preview(val: string) {
+      const res: any = await this.$axios.get(
+        `/fsmEdge/v1/define/getScriptDetails/${val}`,
+      );
+      const str = res.data.scriptSourceCode;
+      const code = codeUtil.unCode(str);
+      notification.open({
+        message: '结果',
+        description: code,
+        duration: null,
+        style: {
+          width: '1000px',
+          marginLeft: `${335 - 1000}px`,
+        },
+      });
+    },
     customRender() {
       const obj: any = {};
       obj.operation = (prop: any) => {
@@ -78,9 +92,16 @@ export default defineComponent({
           <div>
             <a-button
               onClick={() => {
+                this.preview(prop.record.treeCode);
+              }}
+            >
+              预览
+            </a-button>
+            <a-button
+              onClick={() => {
                 this.$router.push({
                   path: '/action',
-                  query: { id: prop.text, recordType: 0 },
+                  query: { id: prop.text, recordType: 1 },
                 });
               }}
             >
@@ -96,9 +117,7 @@ export default defineComponent({
           </div>
         );
       };
-      obj.time = (prop: any) => {
-        return moment(prop.text).format('lll');
-      };
+
       return obj;
     },
   },
@@ -106,13 +125,18 @@ export default defineComponent({
     return (
       <div class='list'>
         <div class='flex tools'>
-          <span>规则名：</span>
+          <span>日志名称：</span>
           <a-input class='input' v-model={[this.code, 'value']} />
           <span>修改时间：</span>
-          <a-range-picker class='timeInput' v-model={[this.time, 'value']} />
+          <a-range-picker
+            class='timeInput'
+            show-time={{ format: 'HH:mm' }}
+            format='YYYY-MM-DD HH:mm'
+            v-model={[this.time, 'value']}
+          />
           <a-button
             type='primary'
-            onClick={() => {
+            onClick={async () => {
               this.getData();
             }}
           >
@@ -123,12 +147,13 @@ export default defineComponent({
             onClick={() => {
               this.$router.push({
                 path: '/action',
-                query: { recordType: 0 },
+                query: { recordType: 1 },
               });
             }}
           >
             新建
           </a-button>
+          {this.test}
         </div>
         <a-table
           dataSource={this.dataSource}

@@ -151,6 +151,9 @@ factory.getEllipse = (x?: number, y?: number) => {
       groups: getGroups(),
       items: getItems(),
     },
+    data: {
+      nodeType: 'RULES',
+    },
   });
 };
 factory.getCircle = (x?: number, y?: number) => {

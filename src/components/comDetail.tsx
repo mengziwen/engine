@@ -12,6 +12,7 @@ export default defineComponent({
     const state = reactive({
       fun: {},
       funOption: [],
+      ruleOption: [],
       funAll: [],
       resData: {
         value: '',
@@ -20,14 +21,16 @@ export default defineComponent({
         paramList: [],
         funcName: '',
         resField: '', // 函数返回字段
-        triggerType: '',
+        triggerType: '', // 触发器相关
         startTime: '',
         period: '',
         actionCodeList: [] as any[],
         eventCodeList: [] as any[],
-        onDataItems: [] as any[],
+        onDataItems: [] as any[], // 触发器结束
+        rulesCode: '',
       },
     });
+    const { proxy }: any = getCurrentInstance();
     const resetObj = (obj: any) => {
       for (const key in obj) {
         if (key.indexOf('List') >= 0 || key.indexOf('Items') >= 0) {
@@ -44,7 +47,7 @@ export default defineComponent({
     onMounted(() => {
       resetObj(state.resData);
       state.resData = { ...state.resData, ...props.com.data.data };
-      const { proxy }: any = getCurrentInstance();
+
       proxy.$axios
         .get('/fsmEdge/v1/define/getAllMethodDefinition')
         .then((res: any) => {
@@ -72,13 +75,6 @@ export default defineComponent({
           });
         }
       });
-      const arr = state.funAll.filter((ele: any) => {
-        return (
-          (ele.name && ele.name.indexOf(val) >= 0) ||
-          ele.funcName.indexOf(val) >= 0
-        );
-      });
-      state.funOption = arr;
     };
     const handleOk = () => {
       context.emit('ok', state.resData);
@@ -321,6 +317,53 @@ export default defineComponent({
         </div>
       );
     };
+    const handleRuleSearch = async (val: string) => {
+      const par: any = { searchTag: val };
+      const res = await proxy.$axios.post('/fsmEdge/v1/componentGraph/search', {
+        recordType: 0,
+        pageNum: 1,
+        pageSize: 1000,
+        ...par,
+      });
+      state.ruleOption = res.data.list;
+    };
+    const handleRuleChange = (val: string) => {
+      state.ruleOption.forEach((element: any) => {
+        if (element.recordCode === val) {
+          state.resData.name = element.name;
+          state.resData.rulesCode = element.recordCode;
+        }
+      });
+    };
+    const renderRules = () => {
+      return (
+        <div>
+          输入规则名称：
+          <a-select
+            show-search
+            v-model={[state.resData.rulesCode, 'value']}
+            placeholder='input search text'
+            notFoundContent={null}
+            filter-option={false}
+            style='width: 200px'
+            onChange={(val: string) => {
+              handleRuleChange(val);
+            }}
+            onSearch={(val: string) => {
+              handleRuleSearch(val);
+            }}
+          >
+            {state.ruleOption.map((ele: any) => {
+              return (
+                <a-select-option key={ele.recordCode}>
+                  {ele.name}:{ele.recordCode}
+                </a-select-option>
+              );
+            })}
+          </a-select>
+        </div>
+      );
+    };
 
     const renderDetail = () => {
       let dom: JSX.Element = '';
@@ -336,6 +379,9 @@ export default defineComponent({
           break;
         case 'TRIGGER':
           dom = renderTrigger();
+          break;
+        case 'RULES':
+          dom = renderRules();
           break;
         default:
           dom = '';
