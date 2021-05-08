@@ -41,7 +41,7 @@ export default defineComponent({
   },
   methods: {
     async getData() {
-      const par: any = { searchTag: this.code };
+      const par: any = { decisionCode: this.code };
       if (this.time.length !== 0) {
         par.startTime = this.time[0].valueOf();
         par.endTime = this.time[1].valueOf();
@@ -92,27 +92,13 @@ export default defineComponent({
           <div>
             <a-button
               onClick={() => {
-                this.preview(prop.record.treeCode);
-              }}
-            >
-              预览
-            </a-button>
-            <a-button
-              onClick={() => {
                 this.$router.push({
                   path: '/action',
                   query: { id: prop.text, recordType: 1 },
                 });
               }}
             >
-              编辑
-            </a-button>
-            <a-button
-              onClick={() => {
-                this.deleteData(prop.text);
-              }}
-            >
-              删除
+              查看
             </a-button>
           </div>
         );
@@ -125,7 +111,7 @@ export default defineComponent({
     return (
       <div class='list'>
         <div class='flex tools'>
-          <span>日志名称：</span>
+          <span>决策code：</span>
           <a-input class='input' v-model={[this.code, 'value']} />
           <span>修改时间：</span>
           <a-range-picker

@@ -11,8 +11,8 @@ export default defineComponent({
       columns: [
         {
           title: '决策名称',
-          dataIndex: 'treeName',
-          key: 'treeName',
+          dataIndex: 'name',
+          key: 'name',
         },
         {
           title: '创建时间',
@@ -90,13 +90,6 @@ export default defineComponent({
       obj.operation = (prop: any) => {
         return (
           <div>
-            <a-button
-              onClick={() => {
-                this.preview(prop.record.treeCode);
-              }}
-            >
-              预览
-            </a-button>
             <a-button
               onClick={() => {
                 this.$router.push({
