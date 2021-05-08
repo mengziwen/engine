@@ -10,9 +10,14 @@ export default defineComponent({
       dataSource: [],
       columns: [
         {
-          title: '日志名称',
-          dataIndex: 'treeName',
-          key: 'treeName',
+          title: 'moduleCode',
+          dataIndex: 'moduleCode',
+          key: 'moduleCode',
+        },
+        {
+          title: 'decisionCode',
+          dataIndex: 'decisionCode',
+          key: 'decisionCode',
         },
         {
           title: '创建时间',
