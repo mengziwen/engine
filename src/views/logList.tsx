@@ -99,7 +99,7 @@ export default defineComponent({
               onClick={() => {
                 this.$router.push({
                   path: '/action',
-                  query: { id: prop.text, recordType: 1 },
+                  query: { id: prop.text, recordType: 1, edit: 'false' },
                 });
               }}
             >

@@ -22,6 +22,7 @@ export default defineComponent({
         funcName: '',
         resField: '', // 函数返回字段
         triggerType: '', // 触发器相关
+        triggerContext: '',
         startTime: '',
         period: '',
         actionCodeList: [] as any[],
@@ -314,6 +315,9 @@ export default defineComponent({
             </a-radio-group>
           </div>
           {renderElement()}
+          <a-textarea
+            v-model={[state.resData.triggerContext, 'value']}
+          ></a-textarea>
         </div>
       );
     };
