@@ -43,7 +43,6 @@ export default defineComponent({
     };
     watch(props, () => {
       resetObj(state.resData);
-      debugger;
       state.resData = { ...state.resData, ...props.com.data.data };
     });
     onMounted(() => {
