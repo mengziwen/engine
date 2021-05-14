@@ -1,5 +1,6 @@
 import { defineComponent, reactive, ref } from 'vue';
 import { Graph, Shape, Addon } from '@antv/x6';
+import { message } from 'ant-design-vue';
 import fac from '@/util/component';
 import comDetail from '@/components/comDetail';
 
@@ -95,7 +96,7 @@ export default defineComponent({
         },
       });
       this.graphEvent();
-      this.graph.addNode(fac.getEllipse(100, 100));
+      // this.graph.addNode(fac.getEllipse(100, 100));
       this.stencil = new Addon.Stencil({
         target: this.graph,
         title: '组件',
@@ -155,7 +156,12 @@ export default defineComponent({
       });
     },
     async setDiaVal(res: any) {
-      this.selectedObj.data.data = { ...this.selectedObj.data.data, ...res };
+      this.selectedObj.data.data = {
+        nodeType: res.nodeType,
+        ...this.selectedObj.data.data,
+        ...res,
+      };
+
       // this.selectedObj.attr('label/text', this.diaObj.name);
       this.diaVisible = false;
     },
@@ -188,10 +194,20 @@ export default defineComponent({
         });
         par.nodeList.push(resNode);
       });
-      const res = await this.$axios.post(
+      const res: any = await this.$axios.post(
         '/fsmEdge/v1/componentGraph/save',
         par,
       );
+      if (res.code === 'M0000') {
+        message.success('保存成功');
+        if (this.recordType === '1') {
+          this.$router.push('/actionList');
+        } else {
+          this.$router.push('/treeList');
+        }
+      } else {
+        message.success('保存失败');
+      }
     },
     renderDia() {
       return (
