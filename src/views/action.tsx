@@ -58,7 +58,7 @@ export default defineComponent({
         grid: true,
         snapline: true,
         container: document.getElementById('graph')!,
-        background: { color: '#C4E1FF' },
+        background: { color: '#ffffff' },
         // 禁止出画布
         translating: {
           restrict: true,
@@ -135,8 +135,8 @@ export default defineComponent({
         this.graph.redo();
       });
       this.graph.on('node:dblclick', (arg: any) => {
-        this.selectedObj = arg.node.store;
-        this.diaObj = { ...this.selectedObj };
+        this.selectedObj = arg.node;
+        this.diaObj = { ...this.selectedObj.store };
         this.diaVisible = true;
       });
       this.graph.on('edge:mouseenter', ({ edge }: any) => {
@@ -155,14 +155,23 @@ export default defineComponent({
         edge.removeTools();
       });
     },
-    async setDiaVal(res: any) {
-      this.selectedObj.data.data = {
-        nodeType: res.nodeType,
-        ...this.selectedObj.data.data,
-        ...res,
+    async setDiaVal(data: any) {
+      const selected = this.selectedObj.store.data;
+      selected.data = {
+        nodeType: data.nodeType,
+        ...selected.data,
+        ...data,
       };
-
-      // this.selectedObj.attr('label/text', this.diaObj.name);
+      const param = {
+        interfaceId: selected.id,
+        nodeCode: selected.id,
+        rulesComponent: selected.data,
+      };
+      const res: any = await this.$axios.post(
+        '/fsmEdge/v1/componentGraph/toView',
+        param,
+      );
+      this.selectedObj.attr('label/text', res.data.viewStr.substr(0, 6));
       this.diaVisible = false;
     },
     async save() {

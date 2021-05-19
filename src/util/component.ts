@@ -10,7 +10,7 @@ function getGroup(position: any) {
       circle: {
         r: 5,
         magnet: true,
-        stroke: '#31d0c6',
+        stroke: '#45B8B1',
         strokeWidth: 1,
         fill: '#fff',
       },
@@ -50,11 +50,11 @@ factory.getRect = (x?: number, y?: number) => {
     height: 40,
     attrs: {
       body: {
-        fill: 'blue',
+        fill: '#A0D5FF',
+        strokeWidth: 1,
       },
       label: {
         text: '触发器',
-        fill: 'white',
       },
     },
     ports: {
@@ -70,11 +70,12 @@ factory.getRectRadius = (x?: number, y?: number) => {
   return new Shape.Rect({
     x,
     y,
-    width: 80,
+    width: 100,
     height: 40,
     attrs: {
       body: {
-        fill: 'yellow',
+        fill: '#FDF1B3',
+        strokeWidth: 1,
         rx: 10,
         ry: 10,
       },
@@ -100,7 +101,8 @@ factory.getRhombus = (x?: number, y?: number) => {
     points: '0,10 20,0 40,10 20,20',
     attrs: {
       body: {
-        fill: 'Darkorange',
+        fill: '#ffc292',
+        strokeWidth: 1,
       },
       label: {
         text: '判断',
@@ -121,7 +123,8 @@ factory.getTrapezoid = (x?: number, y?: number) => {
     points: '5,0 25,0 20,10 0,10',
     attrs: {
       body: {
-        fill: 'Green',
+        fill: '#ACFACE',
+        strokeWidth: 1,
       },
       label: {
         text: 'switch',
@@ -141,7 +144,8 @@ factory.getEllipse = (x?: number, y?: number) => {
     height: 45,
     attrs: {
       body: {
-        fill: 'Magenta',
+        fill: '#F9A4EE',
+        strokeWidth: 1,
       },
       label: {
         text: '规则',
@@ -164,7 +168,8 @@ factory.getCircle = (x?: number, y?: number) => {
     height: 60,
     attrs: {
       body: {
-        fill: 'red',
+        fill: '#FF807C',
+        strokeWidth: 1,
       },
       label: {
         text: '运算符',
@@ -187,7 +192,8 @@ factory.getSquare = (x?: number, y?: number) => {
     height: 60,
     attrs: {
       body: {
-        fill: 'grey',
+        fill: '#DBDFEB',
+        strokeWidth: 1,
       },
       label: {
         text: '常量',
@@ -211,7 +217,8 @@ factory.getTriangle = (x?: number, y?: number) => {
     points: '100,0 200,173 0,173',
     attrs: {
       body: {
-        fill: 'GreenYellow',
+        fill: '#CBFFA3',
+        strokeWidth: 1,
       },
       label: {
         y: 12,

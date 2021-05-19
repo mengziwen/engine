@@ -125,7 +125,17 @@ export default defineComponent({
           <div class='flex line'>
             <div class='name'>返回类型：</div>
             <div class='flex1'>
-              <a-input v-model={[state.resData.valueType, 'value']} />
+              {/* <a-input v-model={[state.resData.valueType, 'value']} /> */}
+              <a-select
+                v-model={[state.resData.valueType, 'value']}
+                style='width: 120px'
+              >
+                <a-select-option value='INT'>整数</a-select-option>
+                <a-select-option value='FLT'>浮点数</a-select-option>
+                <a-select-option value='BOO'>布尔</a-select-option>
+                <a-select-option value='STR'>字符</a-select-option>
+                <a-select-option value='REF'>变量</a-select-option>
+              </a-select>
             </div>
           </div>
         </div>
