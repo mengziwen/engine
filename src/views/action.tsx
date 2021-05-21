@@ -76,9 +76,9 @@ export default defineComponent({
           allowBlank: false,
           allowLoop: false,
           highlight: true,
-          connector: 'rounded',
+          connector: 'normal',
           connectionPoint: 'boundary',
-          router: 'metro',
+          router: 'manhattan',
           createEdge() {
             return new Shape.Edge({
               attrs: {
@@ -194,11 +194,12 @@ export default defineComponent({
           interfaceId: node.id,
           nodeCode: node.id,
           rulesComponent: { ...node.data },
+          nextInterfaceIdSet: [] as any[],
         };
         // 查看是否有连接线
         lines.forEach((line: any) => {
           if (node.id === line.source.cell) {
-            resNode.rulesComponent.nextNodeCode = line.target.cell;
+            resNode.nextInterfaceIdSet.push(line.target.cell);
           }
         });
         par.nodeList.push(resNode);

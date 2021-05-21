@@ -125,7 +125,6 @@ export default defineComponent({
           <div class='flex line'>
             <div class='name'>返回类型：</div>
             <div class='flex1'>
-              {/* <a-input v-model={[state.resData.valueType, 'value']} /> */}
               <a-select
                 v-model={[state.resData.valueType, 'value']}
                 style='width: 120px'
@@ -150,7 +149,16 @@ export default defineComponent({
           </div>
           <div>
             常量类型：
-            <a-input v-model={[state.resData.valueType, 'value']} />
+            <a-select
+              v-model={[state.resData.valueType, 'value']}
+              style='width: 120px'
+            >
+              <a-select-option value='INT'>整数</a-select-option>
+              <a-select-option value='FLT'>浮点数</a-select-option>
+              <a-select-option value='BOO'>布尔</a-select-option>
+              <a-select-option value='STR'>字符</a-select-option>
+              <a-select-option value='REF'>变量</a-select-option>
+            </a-select>
           </div>
         </div>
       );
@@ -160,7 +168,22 @@ export default defineComponent({
         <div>
           <div>
             运算符：
-            <a-input v-model={[state.resData.value, 'value']} />
+            <a-select
+              v-model={[state.resData.value, 'value']}
+              style='width: 120px'
+            >
+              <a-select-option value='add'>加</a-select-option>
+              <a-select-option value='subtract'>减</a-select-option>
+              <a-select-option value='multiply'>乘</a-select-option>
+              <a-select-option value='divide'>除</a-select-option>
+              <a-select-option value='mod'>取余</a-select-option>
+              <a-select-option value='eq'>等于</a-select-option>
+              <a-select-option value='ne'>不等于</a-select-option>
+              <a-select-option value='gt'>大于</a-select-option>
+              <a-select-option value='lt'>小于</a-select-option>
+              <a-select-option value='gte'>大于等于</a-select-option>
+              <a-select-option value='lte'>小于等于</a-select-option>
+            </a-select>
           </div>
         </div>
       );
