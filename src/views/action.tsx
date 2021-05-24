@@ -1,15 +1,32 @@
-import { defineComponent, reactive, ref } from 'vue';
+import {
+  createTextVNode,
+  createVNode,
+  defineComponent,
+  reactive,
+  ref,
+} from 'vue';
 import { Graph, Shape, Addon } from '@antv/x6';
 import { message } from 'ant-design-vue';
 import fac from '@/util/component';
-import comDetail from '@/components/comDetail';
+import FUNCTION from '@/components/graphCom/FUNCTION';
+import CONSTANT from '@/components/graphCom/CONSTANT';
+import OPERATOR from '@/components/graphCom/OPERATOR';
+import TRIGGER from '@/components/graphCom/TRIGGER';
+import RULES from '@/components/graphCom/RULES';
+import LOGIC from '@/components/graphCom/LOGIC';
 
 import '@/assets/less/action.less';
 
+const coms: any = {
+  FUNCTION,
+  CONSTANT,
+  OPERATOR,
+  TRIGGER,
+  RULES,
+  LOGIC,
+};
 export default defineComponent({
-  components: {
-    comDetail,
-  },
+  components: {},
   data() {
     return {
       recordType: 0 as any, // 0规则 1决策
@@ -25,7 +42,7 @@ export default defineComponent({
       selectedObj: undefined as any,
       diaObj: {
         name: '',
-      },
+      } as any,
     };
   },
   mounted() {
@@ -139,6 +156,9 @@ export default defineComponent({
         this.diaObj = { ...this.selectedObj.store };
         this.diaVisible = true;
       });
+      this.graph.on('edge:click', (arg: any) => {
+        console.log(1);
+      });
       this.graph.on('edge:mouseenter', ({ edge }: any) => {
         edge.addTools([
           'source-arrowhead',
@@ -171,7 +191,7 @@ export default defineComponent({
         '/fsmEdge/v1/componentGraph/toView',
         param,
       );
-      this.selectedObj.attr('label/text', res.data.viewStr.substr(0, 6));
+      this.selectedObj.attr('label/text', res.data.viewStr?.substr(0, 6));
       this.diaVisible = false;
     },
     async save() {
@@ -219,7 +239,11 @@ export default defineComponent({
         message.success('保存失败');
       }
     },
-    renderDia() {
+    renderDia(h: any) {
+      const customComName = this.diaObj.data?.data.nodeType;
+      const customCom = customComName
+        ? coms[customComName]
+        : createTextVNode('');
       return (
         <a-drawer
           class='comDra'
@@ -229,18 +253,29 @@ export default defineComponent({
           v-model={[this.diaVisible, 'visible']}
         >
           <div>
-            <comDetail
+            {this.diaObj.data ? (
+              <customCom
+                com={this.diaObj}
+                onOk={(res: any) => {
+                  this.setDiaVal(res);
+                }}
+              />
+            ) : (
+              ''
+            )}
+
+            {/* <comDetail
               com={this.diaObj}
               onOk={(res: any) => {
                 this.setDiaVal(res);
               }}
-            />
+            /> */}
           </div>
         </a-drawer>
       );
     },
   },
-  render() {
+  render(h: any) {
     return (
       <div class='action'>
         <div class='flex info'>
@@ -283,7 +318,7 @@ export default defineComponent({
             保存
           </a-button>
         </div>
-        {this.renderDia()}
+        {this.renderDia(h)}
       </div>
     );
   },

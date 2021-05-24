@@ -229,6 +229,9 @@ factory.getTriangle = (x?: number, y?: number) => {
       groups: getGroups(),
       items: getItems(),
     },
+    data: {
+      nodeType: 'LOGIC',
+    },
   });
 };
 export default factory;
