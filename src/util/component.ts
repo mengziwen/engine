@@ -112,6 +112,9 @@ factory.getRhombus = (x?: number, y?: number) => {
       groups: getGroups(),
       items: getItems(),
     },
+    data: {
+      nodeType: 'SELECTOR',
+    },
   });
 };
 factory.getTrapezoid = (x?: number, y?: number) => {

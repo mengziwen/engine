@@ -14,6 +14,8 @@ import OPERATOR from '@/components/graphCom/OPERATOR';
 import TRIGGER from '@/components/graphCom/TRIGGER';
 import RULES from '@/components/graphCom/RULES';
 import LOGIC from '@/components/graphCom/LOGIC';
+import SELECTOR from '@/components/graphCom/SELECTOR';
+import SELECTORLine from '@/components/graphCom/SELECTORLine';
 
 import '@/assets/less/action.less';
 
@@ -24,6 +26,8 @@ const coms: any = {
   TRIGGER,
   RULES,
   LOGIC,
+  SELECTOR,
+  SELECTORLine,
 };
 export default defineComponent({
   components: {},
@@ -96,7 +100,7 @@ export default defineComponent({
           connector: 'normal',
           connectionPoint: 'boundary',
           router: 'manhattan',
-          createEdge() {
+          createEdge(arg) {
             return new Shape.Edge({
               attrs: {
                 line: {
@@ -110,10 +114,12 @@ export default defineComponent({
               },
             });
           },
+          validateConnection(arg) {
+            return true;
+          },
         },
       });
       this.graphEvent();
-      // this.graph.addNode(fac.getEllipse(100, 100));
       this.stencil = new Addon.Stencil({
         target: this.graph,
         title: '组件',
@@ -157,7 +163,14 @@ export default defineComponent({
         this.diaVisible = true;
       });
       this.graph.on('edge:click', (arg: any) => {
-        console.log(1);
+        this.selectedObj = arg.edge;
+        this.diaObj = { ...this.selectedObj.store };
+        const id = this.diaObj.data.source.cell;
+        const node = this.graph.getCellById(id);
+        if (node.store.data.data.nodeType === 'SELECTOR') {
+          this.selectedObj.setData({ nodeType: 'SELECTORLine' });
+          this.diaVisible = true;
+        }
       });
       this.graph.on('edge:mouseenter', ({ edge }: any) => {
         edge.addTools([
@@ -175,6 +188,7 @@ export default defineComponent({
         edge.removeTools();
       });
     },
+
     async setDiaVal(data: any) {
       const selected = this.selectedObj.store.data;
       selected.data = {
@@ -182,18 +196,25 @@ export default defineComponent({
         ...selected.data,
         ...data,
       };
-      const param = {
-        interfaceId: selected.id,
-        nodeCode: selected.id,
-        rulesComponent: selected.data,
-      };
-      const res: any = await this.$axios.post(
-        '/fsmEdge/v1/componentGraph/toView',
-        param,
-      );
-      this.selectedObj.attr('label/text', res.data.viewStr?.substr(0, 6));
+      if (selected.data.nodeType.indexOf('Line') >= 0) {
+        this.selectedObj.setLabels(data.value);
+      } else {
+        const param = {
+          interfaceId: selected.id,
+          nodeCode: selected.id,
+          rulesComponent: selected.data,
+        };
+
+        const res: any = await this.$axios.post(
+          '/fsmEdge/v1/componentGraph/toView',
+          param,
+        );
+        this.selectedObj.attr('label/text', res.data.viewStr?.substr(0, 6));
+      }
+
       this.diaVisible = false;
     },
+
     async save() {
       const cells = this.graph.toJSON();
       const nodes = cells.cells.filter((ele: any) => {
@@ -202,6 +223,7 @@ export default defineComponent({
       const lines = cells.cells.filter((ele: any) => {
         return ele.shape === 'edge';
       });
+      debugger;
       const par = {
         ...this.action,
         enabled: true,
@@ -240,7 +262,10 @@ export default defineComponent({
       }
     },
     renderDia(h: any) {
-      const customComName = this.diaObj.data?.data.nodeType;
+      let customComName = '';
+      if (this.diaObj.data) {
+        customComName = this.diaObj.data.data?.nodeType;
+      }
       const customCom = customComName
         ? coms[customComName]
         : createTextVNode('');
@@ -263,13 +288,6 @@ export default defineComponent({
             ) : (
               ''
             )}
-
-            {/* <comDetail
-              com={this.diaObj}
-              onOk={(res: any) => {
-                this.setDiaVal(res);
-              }}
-            /> */}
           </div>
         </a-drawer>
       );
