@@ -223,7 +223,6 @@ export default defineComponent({
       const lines = cells.cells.filter((ele: any) => {
         return ele.shape === 'edge';
       });
-      debugger;
       const par = {
         ...this.action,
         enabled: true,
@@ -242,6 +241,18 @@ export default defineComponent({
         lines.forEach((line: any) => {
           if (node.id === line.source.cell) {
             resNode.nextInterfaceIdSet.push(line.target.cell);
+            debugger;
+            if (line.data?.nodeType === 'SELECTORLine') {
+              if (line.labels[0] === 'true') {
+                resNode.rulesComponent.selectorParamList[0].trueInterfaceId =
+                  line.target.cell;
+              } else if (line.labels[0] === 'false') {
+                resNode.rulesComponent.selectorParamList[0].falseInterfaceId =
+                  line.target.cell;
+              } else {
+                message.error('判断走向需要指定值，请继续编辑');
+              }
+            }
           }
         });
         par.nodeList.push(resNode);

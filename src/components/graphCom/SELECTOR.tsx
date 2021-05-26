@@ -23,12 +23,12 @@ export default defineComponent({
     });
     const { proxy }: any = getCurrentInstance();
     watch(props, () => {
-      state.resData.selectorParamList[0] = {};
-      state.resData = { ...state.resData, ...props.com.data.data };
+      state.resData.selectorParamList = props.com.data.data
+        .selectorParamList ?? [{}];
     });
     onMounted(() => {
-      state.resData.selectorParamList[0] = {};
-      state.resData = { ...state.resData, ...props.com.data.data };
+      state.resData.selectorParamList = props.com.data.data
+        .selectorParamList ?? [{}];
     });
 
     const handleOk = () => {
