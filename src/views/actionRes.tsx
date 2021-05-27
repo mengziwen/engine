@@ -58,7 +58,6 @@ export default defineComponent({
       const res = await this.$axios.get(
         `/fsmEdge/v1/componentGraph/logDetails/${this.$route.query.id}/${this.$route.query.createTime}`,
       );
-      debugger;
       res.data[0].cells.forEach((ele: any) => {
         if (ele.shape !== 'edge') {
           for (let i = 1; i < res.data[1].nodeList.length; i += 1) {

@@ -244,7 +244,6 @@ export default defineComponent({
         lines.forEach((line: any) => {
           if (node.id === line.source.cell) {
             resNode.nextInterfaceIdSet.push(line.target.cell);
-            debugger;
             if (line.data?.nodeType === 'SELECTORLine') {
               if (line.labels[0] === 'true') {
                 resNode.rulesComponent.selectorParamList[0].trueInterfaceId =
