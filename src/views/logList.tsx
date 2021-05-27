@@ -21,13 +21,8 @@ export default defineComponent({
         },
         {
           title: '创建时间',
-          dataIndex: 'createTime',
-          key: 'createTime',
-        },
-        {
-          title: '更新时间',
-          dataIndex: 'updateTime',
-          key: 'updateTime',
+          dataIndex: 'time',
+          key: 'time',
         },
         {
           title: '操作',
@@ -51,17 +46,13 @@ export default defineComponent({
         par.startTime = this.time[0].valueOf();
         par.endTime = this.time[1].valueOf();
       }
-      const res = await this.$axios.post('/fsmEdge/v1/componentGraph/search', {
-        recordType: 1,
-        pageNum: 1,
-        pageSize: 1000,
+      const res = await this.$axios.post('/fsmEdge/v1/componentLog/search', {
         ...par,
       });
-      res.data.list.forEach((ele: any) => {
-        ele.createTime = moment(ele.createTime).format('lll');
-        ele.updateTime = moment(ele.updateTime).format('lll');
+      res.data.forEach((ele: any) => {
+        ele.time = moment(ele.createTime).format('lll');
       });
-      this.dataSource = res.data.list;
+      this.dataSource = res.data;
     },
     async deleteData(id: any) {
       const res: any = await this.$axios.delete(
@@ -74,22 +65,7 @@ export default defineComponent({
         message.error('服务异常');
       }
     },
-    async preview(val: string) {
-      const res: any = await this.$axios.get(
-        `/fsmEdge/v1/define/getScriptDetails/${val}`,
-      );
-      const str = res.data.scriptSourceCode;
-      const code = codeUtil.unCode(str);
-      notification.open({
-        message: '结果',
-        description: code,
-        duration: null,
-        style: {
-          width: '1000px',
-          marginLeft: `${335 - 1000}px`,
-        },
-      });
-    },
+
     customRender() {
       const obj: any = {};
       obj.operation = (prop: any) => {
@@ -98,8 +74,11 @@ export default defineComponent({
             <a-button
               onClick={() => {
                 this.$router.push({
-                  path: '/action',
-                  query: { id: prop.text, recordType: 1, edit: 'false' },
+                  path: '/actionRes',
+                  query: {
+                    id: prop.text,
+                    createTime: prop.record.createTime,
+                  },
                 });
               }}
             >

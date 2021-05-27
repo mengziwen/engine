@@ -79,6 +79,10 @@ factory.getRectRadius = (x?: number, y?: number) => {
         rx: 10,
         ry: 10,
       },
+      res: {
+        refX: 0.9,
+        refY: 0.1,
+      },
       label: {
         text: '函数',
       },

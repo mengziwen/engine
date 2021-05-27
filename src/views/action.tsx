@@ -77,7 +77,10 @@ export default defineComponent({
     initGraph() {
       this.graph = new Graph({
         grid: true,
+        // 对齐线
         snapline: true,
+        // 节点缩放
+        resizing: true,
         container: document.getElementById('graph')!,
         background: { color: '#ffffff' },
         // 禁止出画布
