@@ -20,8 +20,12 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   next();
-// });
+router.beforeEach((to, from, next) => {
+  if (location.hash.indexOf('corpId=') > -1) {
+    const corpId = location.hash.split('corpId=')[1];
+    sessionStorage.setItem('corpId', corpId);
+  }
+  next();
+});
 
 export default router;

@@ -63,7 +63,7 @@ export default defineComponent({
           for (let i = 1; i < res.data[1].nodeList.length; i += 1) {
             const item = res.data[1].nodeList[i];
             if (ele.id === item.interfaceId) {
-              ele.attrs.label.text += item.resValue || '';
+              ele.attr('res/text', item.nodeStatus);
             }
           }
         }

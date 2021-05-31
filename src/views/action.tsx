@@ -311,7 +311,15 @@ export default defineComponent({
       <div class='action'>
         <div class='flex info'>
           <div class='flex1 flex ele'>
-            <div class='name'>名称：</div>
+            <div
+              class='name'
+              onClick={() => {
+                console.log(this.graph);
+                debugger;
+              }}
+            >
+              名称：
+            </div>
             <div class='flex1'>
               <a-input v-model={[this.action.name, 'value']}></a-input>
             </div>

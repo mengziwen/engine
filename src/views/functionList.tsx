@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue';
 import moment from 'moment';
-import { message, notification } from 'ant-design-vue';
+import { message, Popconfirm } from 'ant-design-vue';
 import codeUtil from '@/util/uriAndMD5';
 import '@/assets/less/list.less';
 
@@ -111,13 +111,14 @@ export default defineComponent({
             >
               编辑
             </a-button>
-            {/* <a-button
-              onClick={() => {
+            <a-popconfirm
+              title='确认删除?'
+              onConfirm={() => {
                 this.deleteData(prop.text);
               }}
             >
-              删除
-            </a-button> */}
+              <a-button>删除</a-button>
+            </a-popconfirm>
           </div>
         );
       };

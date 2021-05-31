@@ -15,9 +15,9 @@ export default defineComponent({
           key: 'moduleCode',
         },
         {
-          title: 'decisionCode',
-          dataIndex: 'decisionCode',
-          key: 'decisionCode',
+          title: '决策code',
+          dataIndex: 'recordCode',
+          key: 'recordCode',
         },
         {
           title: '创建时间',
@@ -112,17 +112,7 @@ export default defineComponent({
           >
             搜索
           </a-button>
-          <a-button
-            type='primary'
-            onClick={() => {
-              this.$router.push({
-                path: '/action',
-                query: { recordType: 1 },
-              });
-            }}
-          >
-            新建
-          </a-button>
+
           {this.test}
         </div>
         <a-table

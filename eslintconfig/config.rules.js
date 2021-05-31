@@ -21,4 +21,5 @@ exports.rules = {
   "guard-for-in": 0,
   "no-param-reassign": 0,
   "next-line": 0,
+  'no-restricted-globals':0
 };
