@@ -59,11 +59,37 @@ export default defineComponent({
         `/fsmEdge/v1/componentGraph/logDetails/${this.$route.query.id}/${this.$route.query.createTime}`,
       );
       res.data[0].cells.forEach((ele: any) => {
-        if (ele.shape !== 'edge') {
+        // 暂时只有函数
+        if (ele.shape !== 'edge' && ele.data.nodeType === 'FUNCTION') {
           for (let i = 1; i < res.data[1].nodeList.length; i += 1) {
             const item = res.data[1].nodeList[i];
             if (ele.id === item.interfaceId) {
-              ele.attr('res/text', item.nodeStatus);
+              let borderColor = 'grey';
+              let resContent = '';
+              switch (item.nodeStatus) {
+                case 0:
+                  resContent = item.resContent;
+                  borderColor = 'green';
+                  break;
+                case 1:
+                  resContent = item.errorMsg;
+                  borderColor = 'red';
+                  break;
+                default:
+                  borderColor = 'blue';
+              }
+              ele.attrs.body.stroke = borderColor;
+              ele.size = { width: 200, height: 150 };
+              ele.attrs.label.text = item.viewStr;
+              delete item.argContent['@type'];
+              ele.attrs.argContent = {
+                text: JSON.stringify(item.argContent || ''),
+                refY: 0.2,
+              };
+              ele.attrs.resContent = {
+                text: JSON.stringify(resContent),
+                refY: 0.7,
+              };
             }
           }
         }
@@ -145,7 +171,15 @@ export default defineComponent({
       <div class='action'>
         <div class='flex info'>
           <div class='flex1 flex ele'>
-            <div class='name'>名称：</div>
+            <div
+              class='name'
+              onClick={() => {
+                // console.log(this.graph);
+                debugger;
+              }}
+            >
+              名称：
+            </div>
             <div class='flex1'>
               <a-input v-model={[this.action.name, 'value']}></a-input>
             </div>

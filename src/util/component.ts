@@ -48,6 +48,7 @@ factory.getRect = (x?: number, y?: number) => {
     y,
     width: 80,
     height: 40,
+
     attrs: {
       body: {
         fill: '#A0D5FF',
@@ -72,16 +73,30 @@ factory.getRectRadius = (x?: number, y?: number) => {
     y,
     width: 100,
     height: 40,
+    markup: [
+      {
+        tagName: 'rect',
+        selector: 'body',
+      },
+      {
+        tagName: 'text',
+        selector: 'label',
+      },
+      {
+        tagName: 'text',
+        selector: 'argContent',
+      },
+      {
+        tagName: 'text',
+        selector: 'resContent',
+      },
+    ],
     attrs: {
       body: {
         fill: '#FDF1B3',
         strokeWidth: 1,
         rx: 10,
         ry: 10,
-      },
-      res: {
-        refX: 0.9,
-        refY: 0.1,
       },
       label: {
         text: '函数',
