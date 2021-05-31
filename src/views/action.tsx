@@ -314,8 +314,8 @@ export default defineComponent({
             <div
               class='name'
               onClick={() => {
-                console.log(this.graph);
-                debugger;
+                // console.log(this.graph);
+                // debugger;
               }}
             >
               名称：
