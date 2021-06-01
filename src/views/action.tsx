@@ -127,7 +127,7 @@ export default defineComponent({
         target: this.graph,
         title: '组件',
         stencilGraphWidth: 280,
-        stencilGraphHeight: 600 - 32,
+        stencilGraphHeight: 800 - 32,
       });
       const stencilContainer = document.querySelector('#module');
       stencilContainer!.appendChild(this.stencil.container);

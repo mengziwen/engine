@@ -100,13 +100,14 @@ export default defineComponent({
             >
               编辑
             </a-button>
-            <a-button
-              onClick={() => {
+            <a-popconfirm
+              title='确认删除?'
+              onConfirm={() => {
                 this.deleteData(prop.text);
               }}
             >
-              删除
-            </a-button>
+              <a-button>删除</a-button>
+            </a-popconfirm>
           </div>
         );
       };

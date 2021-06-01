@@ -26,6 +26,26 @@ function getGroups() {
   };
   return obj;
 }
+function getMarkup(type: string) {
+  return [
+    {
+      tagName: type,
+      selector: 'body',
+    },
+    {
+      tagName: 'text',
+      selector: 'label',
+    },
+    {
+      tagName: 'text',
+      selector: 'argContent',
+    },
+    {
+      tagName: 'text',
+      selector: 'resContent',
+    },
+  ];
+}
 function getItems() {
   return [
     {
@@ -73,24 +93,7 @@ factory.getRectRadius = (x?: number, y?: number) => {
     y,
     width: 100,
     height: 40,
-    markup: [
-      {
-        tagName: 'rect',
-        selector: 'body',
-      },
-      {
-        tagName: 'text',
-        selector: 'label',
-      },
-      {
-        tagName: 'text',
-        selector: 'argContent',
-      },
-      {
-        tagName: 'text',
-        selector: 'resContent',
-      },
-    ],
+    markup: getMarkup('rect'),
     attrs: {
       body: {
         fill: '#FDF1B3',
@@ -118,6 +121,7 @@ factory.getRhombus = (x?: number, y?: number) => {
     width: 90,
     height: 50,
     points: '0,10 20,0 40,10 20,20',
+    markup: getMarkup('polygon'),
     attrs: {
       body: {
         fill: '#ffc292',

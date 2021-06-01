@@ -60,7 +60,7 @@ export default defineComponent({
       );
       res.data[0].cells.forEach((ele: any) => {
         // 暂时只有函数
-        if (ele.shape !== 'edge' && ele.data.nodeType === 'FUNCTION') {
+        if (ele.shape !== 'edge') {
           for (let i = 1; i < res.data[1].nodeList.length; i += 1) {
             const item = res.data[1].nodeList[i];
             if (ele.id === item.interfaceId) {
@@ -79,9 +79,13 @@ export default defineComponent({
                   borderColor = 'blue';
               }
               ele.attrs.body.stroke = borderColor;
+              ele.attrs.body.strokeWidth = 3;
               ele.size = { width: 200, height: 150 };
               ele.attrs.label.text = item.viewStr;
-              delete item.argContent['@type'];
+              if (item.argContent) {
+                delete item.argContent['@type'];
+              }
+
               ele.attrs.argContent = {
                 text: JSON.stringify(item.argContent || ''),
                 refY: 0.2,
@@ -150,7 +154,7 @@ export default defineComponent({
         target: this.graph,
         title: '组件',
         stencilGraphWidth: 280,
-        stencilGraphHeight: 600 - 32,
+        stencilGraphHeight: 800 - 32,
       });
       const stencilContainer = document.querySelector('#module');
       stencilContainer!.appendChild(this.stencil.container);
