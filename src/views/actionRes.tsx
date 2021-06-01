@@ -204,7 +204,12 @@ export default defineComponent({
           <div id='graph'></div>
         </div>
         <div class='buttons'>
-          <a-button type='primary' onClick={() => {}}>
+          <a-button
+            type='primary'
+            onClick={() => {
+              this.$router.push('logList');
+            }}
+          >
             返回
           </a-button>
         </div>
