@@ -79,7 +79,7 @@ export default defineComponent({
                   borderColor = 'blue';
               }
               ele.attrs.body.stroke = borderColor;
-              ele.attrs.body.strokeWidth = 3;
+              ele.attrs.body.strokeWidth = 2;
               ele.size = { width: 200, height: 150 };
               ele.attrs.label.text = item.viewStr;
               if (item.argContent) {
