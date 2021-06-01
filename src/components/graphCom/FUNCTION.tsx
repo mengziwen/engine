@@ -25,19 +25,23 @@ export default defineComponent({
     });
     const { proxy }: any = getCurrentInstance();
 
-    watch(props, () => {
-      customUtil.resetObj(state.resData);
-      state.resData = { ...state.resData, ...props.com.data.data };
-    });
-    onMounted(() => {
-      customUtil.resetObj(state.resData);
-      state.resData = { ...state.resData, ...props.com.data.data };
-
+    const getOptions = () => {
       proxy.$axios
         .get('/fsmEdge/v1/define/getAllMethodDefinition')
         .then((res: any) => {
           state.funAll = res.data;
         });
+    };
+
+    watch(props, () => {
+      getOptions();
+      customUtil.resetObj(state.resData);
+      state.resData = { ...state.resData, ...props.com.data.data };
+    });
+    onMounted(() => {
+      getOptions();
+      customUtil.resetObj(state.resData);
+      state.resData = { ...state.resData, ...props.com.data.data };
     });
 
     const handleSearch = (val: string) => {
