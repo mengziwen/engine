@@ -16,6 +16,8 @@ import RULES from '@/components/graphCom/RULES';
 import LOGIC from '@/components/graphCom/LOGIC';
 import SELECTOR from '@/components/graphCom/SELECTOR';
 import SELECTORLine from '@/components/graphCom/SELECTORLine';
+import SWITCH from '@/components/graphCom/SWITCH';
+import SWITCHLine from '@/components/graphCom/SWITCHLine';
 
 import '@/assets/less/action.less';
 
@@ -28,6 +30,8 @@ const coms: any = {
   LOGIC,
   SELECTOR,
   SELECTORLine,
+  SWITCH,
+  SWITCHLine,
 };
 export default defineComponent({
   components: {},
@@ -86,6 +90,14 @@ export default defineComponent({
         // 禁止出画布
         translating: {
           restrict: true,
+        },
+        scroller: {
+          enabled: true,
+        },
+        // 缩放
+        mousewheel: {
+          enabled: true,
+          modifiers: ['alt'],
         },
         keyboard: true,
         clipboard: true,
@@ -170,8 +182,9 @@ export default defineComponent({
         this.diaObj = { ...this.selectedObj.store };
         const id = this.diaObj.data.source.cell;
         const node = this.graph.getCellById(id);
-        if (node.store.data.data.nodeType === 'SELECTOR') {
-          this.selectedObj.setData({ nodeType: 'SELECTORLine' });
+        const type = node.store.data.data.nodeType;
+        if (type === 'SELECTOR' || type === 'SWITCH') {
+          this.selectedObj.setData({ nodeType: `${type}Line` });
           this.diaVisible = true;
         }
       });
@@ -200,7 +213,8 @@ export default defineComponent({
         ...data,
       };
       if (selected.data.nodeType.indexOf('Line') >= 0) {
-        this.selectedObj.setLabels(data.value);
+        this.selectedObj.setData({ info: data });
+        this.selectedObj.setLabels(data.value || data.leftOp + data.leftValue);
       } else {
         const param = {
           interfaceId: selected.id,
@@ -233,6 +247,7 @@ export default defineComponent({
         recordType: this.recordType,
         nodeList: [] as any[],
       };
+      debugger;
       nodes.forEach((node: any) => {
         const resNode = {
           interfaceId: node.id,
@@ -254,6 +269,13 @@ export default defineComponent({
               } else {
                 message.error('判断走向需要指定值，请继续编辑');
               }
+            } else if (line.data?.nodeType === 'SWITCHLine') {
+              resNode.rulesComponent.selectorParamList =
+                resNode.rulesComponent.selectorParamList ?? [];
+              resNode.rulesComponent.selectorParamList.push({
+                ...line.data.info,
+                trueInterfaceId: line.target.cell,
+              });
             }
           }
         });

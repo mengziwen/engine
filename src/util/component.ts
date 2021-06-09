@@ -160,6 +160,9 @@ factory.getTrapezoid = (x?: number, y?: number) => {
       groups: getGroups(),
       items: getItems(),
     },
+    data: {
+      nodeType: 'SWITCH',
+    },
   });
 };
 factory.getEllipse = (x?: number, y?: number) => {

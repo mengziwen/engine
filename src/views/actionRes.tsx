@@ -114,6 +114,14 @@ export default defineComponent({
         translating: {
           restrict: true,
         },
+        scroller: {
+          enabled: true,
+        },
+        // 缩放
+        mousewheel: {
+          enabled: true,
+          modifiers: ['alt'],
+        },
         keyboard: true,
         clipboard: true,
         history: true,
