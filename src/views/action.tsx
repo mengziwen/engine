@@ -94,6 +94,22 @@ export default defineComponent({
         scroller: {
           enabled: true,
         },
+        embedding: {
+          enabled: true,
+          findParent({ node }) {
+            const bbox = node.getBBox();
+            return this.getNodes().filter((ele) => {
+              // 只有 data.parent 为 true 的节点才是父节点
+              const data = ele.getData<any>();
+
+              if (data && data.parent) {
+                const targetBBox = ele.getBBox();
+                return bbox.isIntersectWithRect(targetBBox);
+              }
+              return false;
+            });
+          },
+        },
         // 缩放
         mousewheel: {
           enabled: true,
@@ -152,6 +168,7 @@ export default defineComponent({
         fac.getCircle(),
         fac.getSquare(),
         fac.getTriangle(),
+        fac.getGroup(),
       ]);
     },
     graphEvent() {
@@ -247,7 +264,6 @@ export default defineComponent({
         recordType: this.recordType,
         nodeList: [] as any[],
       };
-      debugger;
       nodes.forEach((node: any) => {
         const resNode = {
           interfaceId: node.id,

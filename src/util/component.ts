@@ -1,7 +1,7 @@
 import { Shape, Markup } from '@antv/x6';
 
 const factory: any = {};
-function getGroup(position: any) {
+function getPort(position: any) {
   return {
     position: {
       name: position,
@@ -19,10 +19,10 @@ function getGroup(position: any) {
 }
 function getGroups() {
   const obj = {
-    leftGroup: getGroup('left'),
-    rightGroup: getGroup('right'),
-    topGroup: getGroup('top'),
-    bottomGroup: getGroup('bottom'),
+    leftGroup: getPort('left'),
+    rightGroup: getPort('right'),
+    topGroup: getPort('top'),
+    bottomGroup: getPort('bottom'),
   };
   return obj;
 }
@@ -63,12 +63,13 @@ function getItems() {
   ];
 }
 factory.getRect = (x?: number, y?: number) => {
-  return new Shape.Rect({
+  return new Shape.Polygon({
     x,
     y,
-    width: 80,
+    width: 90,
     height: 40,
-
+    points: '5,0 20,0 25,10 0,10',
+    zIndex: 10,
     attrs: {
       body: {
         fill: '#A0D5FF',
@@ -94,6 +95,7 @@ factory.getRectRadius = (x?: number, y?: number) => {
     width: 100,
     height: 40,
     markup: getMarkup('rect'),
+    zIndex: 10,
     attrs: {
       body: {
         fill: '#FDF1B3',
@@ -120,6 +122,7 @@ factory.getRhombus = (x?: number, y?: number) => {
     y,
     width: 90,
     height: 50,
+    zIndex: 10,
     points: '0,10 20,0 40,10 20,20',
     markup: getMarkup('polygon'),
     attrs: {
@@ -146,6 +149,7 @@ factory.getTrapezoid = (x?: number, y?: number) => {
     y,
     width: 100,
     height: 40,
+    zIndex: 10,
     points: '5,0 25,0 20,10 0,10',
     attrs: {
       body: {
@@ -169,6 +173,7 @@ factory.getEllipse = (x?: number, y?: number) => {
   return new Shape.Ellipse({
     x,
     y,
+    zIndex: 10,
     width: 90,
     height: 45,
     attrs: {
@@ -195,6 +200,7 @@ factory.getCircle = (x?: number, y?: number) => {
     y,
     width: 60,
     height: 60,
+    zIndex: 10,
     attrs: {
       body: {
         fill: '#FF807C',
@@ -219,6 +225,7 @@ factory.getSquare = (x?: number, y?: number) => {
     y,
     width: 60,
     height: 60,
+    zIndex: 10,
     attrs: {
       body: {
         fill: '#DBDFEB',
@@ -243,6 +250,7 @@ factory.getTriangle = (x?: number, y?: number) => {
     y,
     width: 70,
     height: 60,
+    zIndex: 10,
     points: '100,0 200,173 0,173',
     attrs: {
       body: {
@@ -260,6 +268,32 @@ factory.getTriangle = (x?: number, y?: number) => {
     },
     data: {
       nodeType: 'LOGIC',
+    },
+  });
+};
+factory.getGroup = (x?: number, y?: number) => {
+  return new Shape.Rect({
+    x,
+    y,
+    width: 80,
+    height: 40,
+    zIndex: 1,
+    attrs: {
+      body: {
+        fill: '#A0D5FF',
+        strokeWidth: 1,
+      },
+      label: {
+        text: '组',
+      },
+    },
+    ports: {
+      groups: getGroups(),
+      items: getItems(),
+    },
+    data: {
+      nodeType: 'TERM',
+      parent: true,
     },
   });
 };
