@@ -264,6 +264,7 @@ export default defineComponent({
         recordType: this.recordType,
         nodeList: [] as any[],
       };
+      debugger;
       nodes.forEach((node: any) => {
         const resNode = {
           interfaceId: node.id,
@@ -271,6 +272,9 @@ export default defineComponent({
           rulesComponent: { ...node.data },
           nextInterfaceIdSet: [] as any[],
         };
+        if (node.parent) {
+          resNode.rulesComponent.groupInterfaceId = node.parent;
+        }
         // 查看是否有连接线
         lines.forEach((line: any) => {
           if (node.id === line.source.cell) {
