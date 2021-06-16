@@ -293,6 +293,7 @@ factory.getGroup = (x?: number, y?: number) => {
     },
     data: {
       nodeType: 'RULES',
+      embed: true,
       parent: true,
     },
   });

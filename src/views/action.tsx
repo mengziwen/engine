@@ -264,16 +264,15 @@ export default defineComponent({
         recordType: this.recordType,
         nodeList: [] as any[],
       };
-      debugger;
       nodes.forEach((node: any) => {
-        const resNode = {
+        const resNode: any = {
           interfaceId: node.id,
           nodeCode: node.id,
           rulesComponent: { ...node.data },
           nextInterfaceIdSet: [] as any[],
         };
         if (node.parent) {
-          resNode.rulesComponent.groupInterfaceId = node.parent;
+          resNode.groupInterfaceId = node.parent;
         }
         // 查看是否有连接线
         lines.forEach((line: any) => {
@@ -302,7 +301,9 @@ export default defineComponent({
         par.nodeList.push(resNode);
       });
       const res: any = await this.$axios.post(
-        '/fsmEdge/v1/componentGraph/save',
+        `/fsmEdge/v1/componentGraph/${
+          this.$route.query.id ? 'modify' : 'create'
+        }`,
         par,
       );
       if (res.code === 'M0000') {
@@ -361,7 +362,10 @@ export default defineComponent({
           <div class='flex1 flex ele'>
             <div class='name'>code：</div>
             <div class='flex1'>
-              <a-input v-model={[this.action.recordCode, 'value']}></a-input>
+              <a-input
+                v-model={[this.action.recordCode, 'value']}
+                disabled={this.$route.query.id}
+              ></a-input>
             </div>
           </div>
           <div class='flex1 flex ele'>
