@@ -37,6 +37,7 @@ export default defineComponent({
   components: {},
   data() {
     return {
+      id: 0 as any,
       recordType: 0 as any, // 0规则 1决策
       graph: undefined as any,
       stencil: undefined as any,
@@ -45,6 +46,7 @@ export default defineComponent({
         recordCode: '',
         moduleCode: '',
         des: '',
+        enabled: true,
       },
       diaVisible: false,
       selectedObj: undefined as any,
@@ -56,14 +58,15 @@ export default defineComponent({
   mounted() {
     this.initGraph();
     this.recordType = this.$route.query.recordType;
-    if (this.$route.query.id) {
+    this.id = this.$route.query.id;
+    if (this.id) {
       this.getData();
     }
   },
   methods: {
     async getData() {
       const res = await this.$axios.get(
-        `/fsmEdge/v1/componentGraph/getById/${this.$route.query.id}`,
+        `/fsmEdge/v1/componentGraph/getById/${this.id}`,
       );
       res.data[0].cells.forEach((ele: any) => {
         if (ele.shape !== 'edge') {
@@ -259,7 +262,6 @@ export default defineComponent({
       });
       const par = {
         ...this.action,
-        enabled: true,
         graphInfo: cells,
         recordType: this.recordType,
         nodeList: [] as any[],
@@ -301,9 +303,7 @@ export default defineComponent({
         par.nodeList.push(resNode);
       });
       const res: any = await this.$axios.post(
-        `/fsmEdge/v1/componentGraph/${
-          this.$route.query.id ? 'modify' : 'create'
-        }`,
+        `/fsmEdge/v1/componentGraph/${this.id ? 'modify' : 'create'}`,
         par,
       );
       if (res.code === 'M0000') {
@@ -317,7 +317,7 @@ export default defineComponent({
         message.success(res.message);
       }
     },
-    renderDia(h: any) {
+    renderDia() {
       let customComName = '';
       if (this.diaObj.data) {
         customComName = this.diaObj.data.data?.nodeType;
@@ -364,7 +364,7 @@ export default defineComponent({
             <div class='flex1'>
               <a-input
                 v-model={[this.action.recordCode, 'value']}
-                disabled={this.$route.query.id}
+                disabled={this.id}
               ></a-input>
             </div>
           </div>
@@ -378,6 +378,13 @@ export default defineComponent({
             <div class='name'>描述：</div>
             <div class='flex1'>
               <a-input v-model={[this.action.des, 'value']}></a-input>
+            </div>
+          </div>
+          <div class='flex1 flex ele'>
+            <div class='flex1'>
+              <a-checkbox v-model={[this.action.enabled, 'checked']}>
+                启用
+              </a-checkbox>
             </div>
           </div>
         </div>
@@ -395,7 +402,7 @@ export default defineComponent({
             保存
           </a-button>
         </div>
-        {this.renderDia(h)}
+        {this.renderDia()}
       </div>
     );
   },
