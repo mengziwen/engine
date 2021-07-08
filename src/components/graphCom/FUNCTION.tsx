@@ -101,6 +101,11 @@ export default defineComponent({
                 <div class='flex1'>
                   <a-input v-model={[ele.value, 'value']} />
                 </div>
+                <div>
+                  <a-checkbox
+                    v-model={[ele.dynamically, 'checked']}
+                  ></a-checkbox>
+                </div>
               </div>
             );
           })}
