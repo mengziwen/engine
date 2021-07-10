@@ -25,6 +25,12 @@ export default defineComponent({
           key: 'updateTime',
         },
         {
+          title: '是否启用',
+          dataIndex: 'enabled',
+          key: 'enabled',
+          slots: { customRender: 'enabled' },
+        },
+        {
           title: '操作',
           dataIndex: 'id',
           key: 'id',
@@ -87,6 +93,9 @@ export default defineComponent({
     },
     customRender() {
       const obj: any = {};
+      obj.enabled = (prop: any) => {
+        return prop ? '启用' : '未启用';
+      };
       obj.operation = (prop: any) => {
         return (
           <div>
