@@ -226,6 +226,7 @@ export default defineComponent({
     },
 
     async setDiaVal(data: any) {
+      this.diaObj = {};
       const selected = this.selectedObj.store.data;
       selected.data = {
         nodeType: data.nodeType,

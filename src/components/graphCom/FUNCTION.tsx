@@ -32,12 +32,6 @@ export default defineComponent({
           state.funAll = res.data;
         });
     };
-
-    watch(props, () => {
-      getOptions();
-      customUtil.resetObj(state.resData);
-      state.resData = { ...state.resData, ...props.com.data.data };
-    });
     onMounted(() => {
       getOptions();
       customUtil.resetObj(state.resData);
