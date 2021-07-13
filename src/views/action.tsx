@@ -66,7 +66,7 @@ export default defineComponent({
   methods: {
     async getData() {
       const res = await this.$axios.get(
-        `/fsmEdge/v1/componentGraph/getById/${this.id}`,
+        `/smartfsm/v1/fsmEdge/componentGraph/getById/${this.id}`,
       );
       res.data[0].cells.forEach((ele: any) => {
         if (ele.shape !== 'edge') {
@@ -244,7 +244,7 @@ export default defineComponent({
         };
 
         const res: any = await this.$axios.post(
-          '/fsmEdge/v1/componentGraph/toView',
+          '/smartfsm/v1/fsmEdge/componentGraph/toView',
           param,
         );
         this.selectedObj.attr('label/text', res.data.viewStr?.substr(0, 6));
@@ -304,7 +304,7 @@ export default defineComponent({
         par.nodeList.push(resNode);
       });
       const res: any = await this.$axios.post(
-        `/fsmEdge/v1/componentGraph/${this.id ? 'modify' : 'create'}`,
+        `/smartfsm/v1/fsmEdge/componentGraph/${this.id ? 'modify' : 'create'}`,
         par,
       );
       if (res.code === 'M0000') {

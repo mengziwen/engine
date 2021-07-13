@@ -27,7 +27,7 @@ export default defineComponent({
 
     const getOptions = () => {
       proxy.$axios
-        .get('/fsmEdge/v1/define/getAllMethodDefinition')
+        .get('/smartfsm/v1/fsmEdge/define/getAllMethodDefinition')
         .then((res: any) => {
           state.funAll = res.data;
         });

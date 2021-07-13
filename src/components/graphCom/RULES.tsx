@@ -35,12 +35,15 @@ export default defineComponent({
 
     const handleRuleSearch = async (val: string) => {
       const par: any = { searchTag: val };
-      const res = await proxy.$axios.post('/fsmEdge/v1/componentGraph/search', {
-        recordType: 0,
-        pageNum: 1,
-        pageSize: 1000,
-        ...par,
-      });
+      const res = await proxy.$axios.post(
+        '/smartfsm/v1/fsmEdge/componentGraph/search',
+        {
+          recordType: 0,
+          pageNum: 1,
+          pageSize: 1000,
+          ...par,
+        },
+      );
       state.ruleOption = res.data.list;
     };
     const handleRuleChange = (val: string) => {

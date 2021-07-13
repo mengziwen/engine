@@ -45,14 +45,16 @@ export default defineComponent({
   methods: {
     async getData(id: any) {
       // 详情
-      const res = await this.$axios.get(`/fsmEdge/v1/ruleFunc/getById/${id}`);
+      const res = await this.$axios.get(
+        `/smartfsm/v1/fsmEdge/ruleFunc/getById/${id}`,
+      );
       this.funObj = res.data;
       this.param = res.data.paramDefineList;
       const code = codeUtil.unCode(res.data.scriptDetails);
       this.aceEditor.setValue(code);
       // 触发条件
       const res2 = await this.$axios.get(
-        `/fsmEdge/v1/scheduler/getByCode/${this.funObj.funcName}`,
+        `/smartfsm/v1/fsmEdge/scheduler/getByCode/${this.funObj.funcName}`,
       );
       if (res2.data) {
         this.dataTrigger = res2.data.schedulerOnDataItems;
@@ -70,13 +72,13 @@ export default defineComponent({
       this.funObj.paramDefineList = this.param;
       // 保存详情
       const res = await this.$axios.post(
-        '/fsmEdge/v1/ruleFunc/save',
+        '/smartfsm/v1/fsmEdge/ruleFunc/save',
         this.funObj,
       );
       // 保存触发条件
       if (this.timeTrigger.length === 0 && this.dataTrigger.length === 0) {
         const res2 = await this.$axios.delete(
-          `/fsmEdge/v1/scheduler/deleteByCode/${this.funObj.funcName}`,
+          `/smartfsm/v1/fsmEdge/scheduler/deleteByCode/${this.funObj.funcName}`,
         );
       } else {
         const par: any = {
@@ -90,7 +92,10 @@ export default defineComponent({
           par.startTime = this.timeTrigger[0].delay;
           par.period = this.timeTrigger[0].period;
         }
-        const res2 = await this.$axios.post('/fsmEdge/v1/scheduler/save', par);
+        const res2 = await this.$axios.post(
+          '/smartfsm/v1/fsmEdge/scheduler/save',
+          par,
+        );
       }
 
       message.success('保存成功');
@@ -101,7 +106,7 @@ export default defineComponent({
       this.funObj.scriptDetails = codeUtil.enCode(code);
       this.funObj.paramDefineList = this.param;
       const res = await this.$axios.post(
-        '/fsmEdge/v1/ruleFunc/preview',
+        '/smartfsm/v1/fsmEdge/ruleFunc/preview',
         this.funObj,
       );
       const str = res.data.scriptSourceCode;

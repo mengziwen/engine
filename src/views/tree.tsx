@@ -120,7 +120,7 @@ export default defineComponent({
     const { proxy }: any = getCurrentInstance();
 
     proxy.$axios
-      .get('/fsmEdge/v1/define/getAllMethodDefinition')
+      .get('/smartfsm/v1/fsmEdge/define/getAllMethodDefinition')
       .then((res: any) => {
         funAll = res.data;
       });
@@ -139,7 +139,7 @@ export default defineComponent({
   methods: {
     async getData(id: any) {
       const res = await this.$axios.get(
-        `/fsmEdge/v1/ruleExpression/getTreeById/${id}`,
+        `/smartfsm/v1/fsmEdge/ruleExpression/getTreeById/${id}`,
       );
       const serverTree = res.data.rootTreeNode;
       this.treeObj.treeName = res.data.treeName;
@@ -208,7 +208,7 @@ export default defineComponent({
       obj.tupleParamList = this.state.fun.paramDefineList;
       // 获取显示文本
       const res = await this.$axios.post(
-        '/fsmEdge/v1/ruleExpression/toFuncTupleView',
+        '/smartfsm/v1/fsmEdge/ruleExpression/toFuncTupleView',
         obj,
       );
       this.funObj.show = res.data.viewStr;
@@ -222,7 +222,7 @@ export default defineComponent({
         rootTreeNode: this.getServerNode(this.tree[0]),
       };
       const res: any = await this.$axios.post(
-        '/fsmEdge/v1/ruleExpression/preview',
+        '/smartfsm/v1/fsmEdge/ruleExpression/preview',
         obj,
       );
       const str = res.data.scriptSourceCode;
@@ -245,7 +245,7 @@ export default defineComponent({
         rootTreeNode: this.getServerNode(this.tree[0]),
       };
       const res: any = await this.$axios.post(
-        '/fsmEdge/v1/ruleExpression/save',
+        '/smartfsm/v1/fsmEdge/ruleExpression/save',
         obj,
       );
       if (res.code === 'M0000') {

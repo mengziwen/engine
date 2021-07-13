@@ -58,11 +58,14 @@ export default defineComponent({
         par.startTime = this.time[0].valueOf();
         par.endTime = this.time[1].valueOf();
       }
-      const res = await this.$axios.post('/fsmEdge/v1/ruleFunc/search', {
-        pageNum: 1,
-        pageSize: 1000,
-        ...par,
-      });
+      const res = await this.$axios.post(
+        '/smartfsm/v1/fsmEdge/ruleFunc/search',
+        {
+          pageNum: 1,
+          pageSize: 1000,
+          ...par,
+        },
+      );
       res.data.list.forEach((ele: any) => {
         ele.createTime = moment(ele.createTime).format('lll');
         ele.updateTime = moment(ele.updateTime).format('lll');
@@ -71,7 +74,7 @@ export default defineComponent({
     },
     async deleteData(id: any) {
       const res: any = await this.$axios.delete(
-        `/fsmEdge/v1/ruleFunc/delete/${id}`,
+        `/smartfsm/v1/fsmEdge/ruleFunc/delete/${id}`,
       );
       if (res.code === 'M0000') {
         message.success('删除成功');
@@ -82,7 +85,7 @@ export default defineComponent({
     },
     async preview(funcName: string) {
       const res: any = await this.$axios.get(
-        `/fsmEdge/v1/define/getScriptDetails/${funcName}`,
+        `/smartfsm/v1/fsmEdge/define/getScriptDetails/${funcName}`,
       );
       const str = res.data.scriptSourceCode;
       this.dia.code = codeUtil.unCode(str);
@@ -131,7 +134,10 @@ export default defineComponent({
       };
       par.args = this.dia.param ? JSON.parse(this.dia.param) : {};
       par.ctx = this.dia.context ? JSON.parse(this.dia.context) : {};
-      const res = await this.$axios.post('/fsmEdge/v1/ruleFunc/testRun', par);
+      const res = await this.$axios.post(
+        '/smartfsm/v1/fsmEdge/ruleFunc/testRun',
+        par,
+      );
       this.dia.res = JSON.stringify(res.data, null, 2);
     },
     renderDia() {

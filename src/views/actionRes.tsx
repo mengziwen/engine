@@ -56,7 +56,7 @@ export default defineComponent({
   methods: {
     async getData() {
       const res = await this.$axios.get(
-        `/fsmEdge/v1/componentGraph/logDetails/${this.$route.query.id}/${this.$route.query.createTime}`,
+        `/smartfsm/v1/fsmEdge/componentGraph/logDetails/${this.$route.query.id}/${this.$route.query.createTime}`,
       );
       res.data[0].cells.forEach((ele: any) => {
         // 暂时只有函数

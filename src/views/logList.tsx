@@ -46,9 +46,12 @@ export default defineComponent({
         par.startTime = this.time[0].valueOf();
         par.endTime = this.time[1].valueOf();
       }
-      const res = await this.$axios.post('/fsmEdge/v1/componentLog/search', {
-        ...par,
-      });
+      const res = await this.$axios.post(
+        '/smartfsm/v1/fsmEdge/componentLog/search',
+        {
+          ...par,
+        },
+      );
       res.data.forEach((ele: any) => {
         ele.time = moment(ele.createTime).format('lll');
       });
@@ -56,7 +59,7 @@ export default defineComponent({
     },
     async deleteData(id: any) {
       const res: any = await this.$axios.delete(
-        `/fsmEdge/v1/ruleExpression/deleteTree/${id}`,
+        `/smartfsm/v1/fsmEdge/ruleExpression/deleteTree/${id}`,
       );
       if (res.code === 'M0000') {
         message.success('删除成功');

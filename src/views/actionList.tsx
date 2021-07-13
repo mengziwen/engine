@@ -52,12 +52,15 @@ export default defineComponent({
         par.startTime = this.time[0].valueOf();
         par.endTime = this.time[1].valueOf();
       }
-      const res = await this.$axios.post('/fsmEdge/v1/componentGraph/search', {
-        recordType: 1,
-        pageNum: 1,
-        pageSize: 1000,
-        ...par,
-      });
+      const res = await this.$axios.post(
+        '/smartfsm/v1/fsmEdge/componentGraph/search',
+        {
+          recordType: 1,
+          pageNum: 1,
+          pageSize: 1000,
+          ...par,
+        },
+      );
       res.data.list.forEach((ele: any) => {
         ele.createTime = moment(ele.createTime).format('lll');
         ele.updateTime = moment(ele.updateTime).format('lll');
@@ -66,7 +69,7 @@ export default defineComponent({
     },
     async deleteData(id: any) {
       const res: any = await this.$axios.delete(
-        `/fsmEdge/v1/componentGraph/delete/${id}`,
+        `/smartfsm/v1/fsmEdge/componentGraph/delete/${id}`,
       );
       if (res.code === 'M0000') {
         message.success('删除成功');
@@ -77,7 +80,7 @@ export default defineComponent({
     },
     async preview(val: string) {
       const res: any = await this.$axios.get(
-        `/fsmEdge/v1/define/getScriptDetails/${val}`,
+        `/smartfsm/v1/fsmEdge/define/getScriptDetails/${val}`,
       );
       const str = res.data.scriptSourceCode;
       const code = codeUtil.unCode(str);
